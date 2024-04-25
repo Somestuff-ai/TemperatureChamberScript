@@ -1,14 +1,21 @@
 import serial
 import csv
+import time
 
+
+#calls to function to set temp 
+ 
+#function takes in temperature, time an delay as arguments
 # Opens serial port
+
+start = ti
 ser = serial.Serial ('COM3',9600) 
 
 
 command = bytearray('\x0401v000a10\x03$', 'ascii') #uses XOR checksum sets temperature to 10
 ser.write(command)
 
-ser = serial.Serial ('COM 14', 9600, timeout = 1)
+ser = serial.Serial ('COM14', 9600, timeout = 1)
 
 with open('serialnumnber_data.csv', 'a', newline='') as csvfile:
     writer = csv.writer(csvfile) # creates writer object
@@ -17,5 +24,7 @@ with open('serialnumnber_data.csv', 'a', newline='') as csvfile:
     ser.write(ISOTECH_command)
     isotech_data = ser.readline()
     ISOTECH = float(isotech_data[2:8])
+
+
 
    
