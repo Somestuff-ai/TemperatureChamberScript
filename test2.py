@@ -24,14 +24,39 @@ def read_response(device):
     response = serial_connections[device].readline().decode().strip()
     return response
 
-def delay(seconds):
-    # Delay for specified number of seconds
-    time.sleep(seconds)
+# Function to read response from the relevant comport
+def fur_send_command(device,command):
+    serial_connections[device].write(command.encode(encoding = "ascii"))
+    ser = serial.Serial ('COM11',9600)
+    
+    vals = []
+    
+    while True:
+        ser.write(enq)
+        res = ''
+        
+        while True:
+            byte = ser.read()
+            if byte:
+                res += byte.decode('ascii')
+            else:
+                break
+        start_index = res.find('k') + 1
+        end_index = res.find('l')
+        substr = res[start_index:end_index]
+        substr = float(substr)
+        vals.append(substr)       
+        response = vals
+        vals = []    
+
+        return response
+
 
 def set_temp(temperature, elapsed_time, log_delay):
     # Send command to set temperature
     command = f"\x0401v000a{temperature}\x03$"
     send_command(1, command)
+    fur_send_command()
 
     # Wait for specified elapsed time
     #delay(elapsed_time)
@@ -41,7 +66,7 @@ def main():
     
     #Call set_temp subroutine for each temperature setting
     set_temp(10, 10, 10)  # Temperature: 10, Elapsed time: 10 seconds, Log delay: 10 seconds
-    
+    fur_send_command(1, 9600)
     #set_temp(20, 20, 10)  # Temperature: 20, Elapsed time: 20 seconds, Log delay: 10 seconds
    # set_temp(30, 30, 10)  # Temperature: 30, Elapsed time: 30 seconds, Log delay: 10 seconds
     #set_temp(20, 40, 10)  # Temperature: 20,
@@ -53,7 +78,7 @@ def main():
     #response = read_response(1)
     #print("Response from device 1:", response)
 
-    delay(1)  # Delay for 1 second
+    # Delay for 1 second
 
     # Example script commands for device 7 (microcalibrator)
     #send_command(7, "CMD c")  # Replace 'c' with your Fbus command for device 7
