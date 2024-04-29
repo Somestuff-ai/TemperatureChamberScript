@@ -1,22 +1,29 @@
 
 import serial
-# ser = serial.Serial ('COM3',9600)
+ser = serial.Serial ('COM3',9600)
 
-# enq = bytearray('\x0401M200a\x05{', 'ascii') #Oven Temperature a-b
+enq = bytearray('\x0401M200a\x05{', 'ascii') #Oven Temperature a-b
 
-# while True:
-#     ser.write(enq)
-#     res = ''
+while True:
+    ser.write(enq)
+    res = ''
     
 
-#     while True:
-#         byte = ser.read()
-#         if byte:
-#             res += byte.decode('ascii')
-#         else:
-#             break
+    while True:
+        response = ser.read_until(b'\x03')  # Read until <ETX> character (ASCII code 3) is encountered
+        res += response.decode('ascii')
+        if res.endswith('\x03'):
+            break
+    start_index = res.find('a') + 1
+    end_index = res.find('b')
+    substr = res[start_index:end_index]
+    substr = float(substr)
+    vals.append(substr)       
+    response = vals
+    print (response)
+    vals = [] 
         
-# print(res)    
+print(res)    
 
 ser = serial.Serial ('COM11',9600)
 
