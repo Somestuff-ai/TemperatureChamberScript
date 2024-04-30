@@ -1,5 +1,6 @@
 
 import serial
+import time
 # ser = serial.Serial ('COM3',9600)
 
 # enq = bytearray('\x0401M200\x05{', 'ascii') #Oven Temperature a-b
@@ -62,19 +63,42 @@ import serial
 
 
 
-ser = serial.Serial ('COM14',9600, timeout= 1)
 
-enq = b'\\x5C\x20\x20' 
-res = b''
-ser.write(enq)  # Assuming this is the equivalent of '\ü ' in Python
-print (enq)
+# Open serial port
+ser = serial.Serial('COM14', 2400, timeout=1)  
 
-while True:
-    byte = ser.read()
-    if byte:
-        res += byte
-    else:
-        break
+# Define the communication string
+communication_string = b'\\xfc\x20'  # This includes the escape backslash
+
+# Send the communication string
+ser.write(communication_string)
+
+# Wait for 1000 ms (1 second)
+time.sleep(1)
+
+# Read response
+response = ser.read_all()
+print("Response:", response)
+
+# Close the serial port
+ser.close()
+
+
+
+
+# ser = serial.Serial ('COM14',2400, timeout= 1)
+
+# enq = b'\\xfc ' 
+# res = b''
+# ser.write(enq)  # Assuming this is the equivalent of '\ü ' in Python
+# print (enq)
+
+# while True:
+#     byte = ser.read()
+#     if byte:
+#         res += byte
+#     else:
+#         break
 
 
 # ser = serial.Serial ('COM14',9600, timeout = 1)
