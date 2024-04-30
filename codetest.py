@@ -65,10 +65,10 @@ import time
 
 
 # Open serial port
-ser = serial.Serial('COM14', 2400, timeout=1)  
+ser = serial.Serial('COM14', 2400)  
 
 # Define the communication string
-communication_string = b'\\xfc\x20'  # This includes the escape backslash
+communication_string = b'\x5c\xfc'  # This includes the escape backslash
 
 # Send the communication string
 ser.write(communication_string)
@@ -78,6 +78,14 @@ time.sleep(1)
 
 # Read response
 response = ser.read_all()
+
+response_str = response.decode('utf-8')
+numerical_value = response_str[2:8]
+
+
+print("Extracted value:", numerical_value)
+
+
 print("Response:", response)
 
 # Close the serial port
