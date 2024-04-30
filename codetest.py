@@ -65,7 +65,7 @@ import serial
 
 ser = serial.Serial ('COM14',9600)
 
-enq = b'\xFC ' #WS504 Temp Reading k-l and EUT mA reading n-o
+enq = b'\xFC\x20' #WS504 Temp Reading k-l and EUT mA reading n-o
 
 last_response = ""
 
@@ -74,14 +74,14 @@ while True:
     
     res = b''
     while True:
-        byte = ser.read()
+        byte = ser.read(1)
         if byte:
             res += byte
-        else:
-            break
-    
-    last_response = res  # Save the last response
-    
+            if len(res) >= 8:
+                break
+            else:
+                break
+        
     isotech = res[2:8]  # Extracting from the 3rd character to the next 6 characters
     print(isotech)
 
