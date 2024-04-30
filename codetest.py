@@ -62,27 +62,40 @@ import serial
 
 
 
+ser = serial.Serial ('COM14',9600, timeout= 1)
 
-ser = serial.Serial ('COM14',9600)
-
-enq = b'\xFC\x20' #WS504 Temp Reading k-l and EUT mA reading n-o
-
-last_response = ""
+enq = b'\\x5C\x20\x20' 
+res = b''
+ser.write(enq)  # Assuming this is the equivalent of '\ü ' in Python
+print (enq)
 
 while True:
-    ser.write(enq)  # Assuming this is the equivalent of '\ü ' in Python
+    byte = ser.read()
+    if byte:
+        res += byte
+    else:
+        break
+
+
+# ser = serial.Serial ('COM14',9600, timeout = 1)
+
+# enq = b'\x5C\xFC' 
+# res = b''
+
+
+# while True:
+#     ser.write(enq)  # Assuming this is the equivalent of '\ü ' in Python
     
-    res = b''
-    while True:
-        byte = ser.read(1)
-        if byte:
-            res += byte
-            if len(res) >= 8:
-                break
-            else:
-                break
+#     while True:
+#         byte = ser.read(1)
+#         if byte:
+#             res += byte
+#             if len(res) >= 8:
+#                 break
+#             else:
+#                 break
         
-    isotech = res[2:8]  # Extracting from the 3rd character to the next 6 characters
-    print(isotech)
+#     isotech = res[2:8]  # Extracting from the 3rd character to the next 6 characters
+#     print(isotech)
 
 
