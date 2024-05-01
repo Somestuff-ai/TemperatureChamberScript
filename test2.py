@@ -1,5 +1,6 @@
 import serial
 import time
+import csv
 
 # Define serial port parameters for each device
 SERIAL_PORTS = {
@@ -67,8 +68,8 @@ def main():
     headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA", "Oven T"]
 
     with open(csv_file_path, mode='w', newline='') as file:
-        writer = csv.DictWriter(file, fieldnames=headers)
-        writer.writeheader()
+        writer = csv.writer(file)
+        writer.writerow(headers))
     
     #set_temp(10, 10, 10)  # Temperature: 10, Elapsed time: 10 seconds, Log delay: 10 seconds
     fur_send_command(1,'Temp','\x0401M200\x05{' )
