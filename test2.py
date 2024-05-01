@@ -25,38 +25,42 @@ def read_response(device):
     return response
 
 # Function to read response from the relevant comport
-def fur_send_command(device,command):
-    serial_connections[device].write(command.encode(encoding = "ascii"))
-    ser = serial.Serial ('COM11',9600)
-    
+def fur_send_command(device, baudrate, reading, command):
+    enq = bytearray(command, 'ascii')
+    ser = serial.Serial (device, baudrate)
+    #serial_connections[device].write(command.encode(encoding = "ascii"))
     vals = []
-    
-    while True:
-        ser.write(enq)
-        res = ''
-        
-        while True:
-            byte = ser.read()
-            if byte:
-                res += byte.decode('ascii')
-            else:
-                break
-        start_index = res.find('k') + 1
-        end_index = res.find('l')
-        substr = res[start_index:end_index]
-        substr = float(substr)
-        vals.append(substr)       
-        response = vals
-        vals = []    
+    ser.write(enq)
+    res = ''
+    response = ser.read_until(b'\x03')  # Read until <ETX> character (ASCII code 3) is encountered#
+    res += response.decode('ascii')
 
-        return response
+    if device == 1:
+        if reading == 'Temp':
+            start_index = res.find('a') + 1
+            end_index = res.find('b',start_index)            
+    elif device == 7:
+        if reading == 'Temp':
+            start_index = res.find('k', res.find('j')) + 1
+            end_index = res.find('l',start_index)
+        elif reading == 'mA':
+            start_index = res.find('n', res.find('l')) + 1
+            end_index = res.find('o', start_index)
+
+    substr = res[start_index:end_index]
+    substr = float(substr)
+    vals.append(substr)       
+    response = vals
+    print (response)
+    vals = []     
+
 
 
 def set_temp(temperature, elapsed_time, log_delay):
     # Send command to set temperature
     command = f"\x0401v000a{temperature}\x03$"
     send_command(1, command)
-    fur_send_command()
+    
 
     # Wait for specified elapsed time
     #delay(elapsed_time)
@@ -66,7 +70,7 @@ def main():
     
     #Call set_temp subroutine for each temperature setting
     set_temp(10, 10, 10)  # Temperature: 10, Elapsed time: 10 seconds, Log delay: 10 seconds
-    fur_send_command(1, 9600)
+    fur_send_command(1,9600,'Temp','\x0401M200\x05{' )
     #set_temp(20, 20, 10)  # Temperature: 20, Elapsed time: 20 seconds, Log delay: 10 seconds
    # set_temp(30, 30, 10)  # Temperature: 30, Elapsed time: 30 seconds, Log delay: 10 seconds
     #set_temp(20, 40, 10)  # Temperature: 20,
