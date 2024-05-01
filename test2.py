@@ -1,12 +1,13 @@
 import serial
 import time
 import csv
+from datetime import datetime
 
 # Define serial port parameters for each device
 SERIAL_PORTS = {
     1: {'port': 'COM3', 'baudrate': 9600},
     7: {'port': 'COM11', 'baudrate': 9600},
-    14: {'port': 'COM14', 'baudrate': 9600}
+    14: {'port': 'COM14', 'baudrate': 2400}
 }
 
 # Initialize serial connections for each device
@@ -22,7 +23,7 @@ def send_command(device, command):
 
 
 
-# Function to read response from the relevant comport
+# Function to read response from the relevant furness comport
 def fur_send_command(device, reading, command):
     global response
     ser = serial_connections[device]
@@ -49,9 +50,21 @@ def fur_send_command(device, reading, command):
     response = substr
     return response
 
+def tt10_send_command():
+    ser = serial_connections[device]
+    enq = b'\x5c\xfc'
+    ser.write(enq)
 
+    time.sleep(1)
+    response = ser.read_all()
 
-def set_temp(temperature, elapsed_time, log_delay):
+    substr = response.decode('utf-8')
+    response = substr[2:8]
+
+    return response
+    
+
+def set_temp(temperature):
     # Send command to set temperature
     command = f"\x0401v000a{temperature}\x03$"
     send_command(1, command)
@@ -66,15 +79,44 @@ def main():
     #Create CSV file with headers
     csv_file_path = "data.csv"
     headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA", "Oven T"]
-
-    with open(csv_file_path, mode='w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(headers))
     
-    #set_temp(10, 10, 10)  # Temperature: 10, Elapsed time: 10 seconds, Log delay: 10 seconds
-    fur_send_command(1,'Temp','\x0401M200\x05{' )
-    Oven_T= response
-    print (Oven_T)
+    with open(csv_file_path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(headers)
+    
+    set_temp(10)  # Temperature: 10, Elapsed time: 10 seconds, Log delay: 10 seconds
+    
+    start_time = datetime.now()
+    while True:
+
+        fur_send_command(1,'Temp','\x0401M200\x05{' )
+        Oven_T= response
+        print (Oven_T)
+
+        fur_send_command(7, 'Temp', '\x0401L002\x05z')
+        WS504_T = response
+        print(WS504_T)
+
+        fur_send_command(7, 'mA','\x0401L002\x05z')
+        EUT_mA = response
+        print (EUT_mA)
+
+        tt10_send_command()
+        ISOTECH_T = response
+        print(ISOTECH_T)
+
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        elapsed_time = current_time - start_time
+
+        with open(csv_file_path, mode='a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([current_time, elapsed_time, Oven_T, WS504_T,EUT_mA,ISOTECH_T])
+        
+        if elapsed_time >= 10:
+            break
+
+
+
     #set_temp(20, 20, 10)  # Temperature: 20, Elapsed time: 20 seconds, Log delay: 10 seconds
    # set_temp(30, 30, 10)  # Temperature: 30, Elapsed time: 30 seconds, Log delay: 10 seconds
     #set_temp(20, 40, 10)  # Temperature: 20,
