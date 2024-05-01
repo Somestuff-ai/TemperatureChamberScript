@@ -19,17 +19,13 @@ def send_command(device, command):
     # Send command over serial for specified device
     serial_connections[device].write(command.encode(encoding = "ascii"))
 
-def read_response(device):
-    # Read response from serial for specified device
-    response = serial_connections[device].readline().decode().strip()
-    return response
+
 
 # Function to read response from the relevant comport
-def fur_send_command(device, baudrate, reading, command):
+def fur_send_command(device, reading, command):
+    global response
+    ser = serial_connections[device]
     enq = bytearray(command, 'ascii')
-    ser = serial.Serial (device, baudrate)
-    #serial_connections[device].write(command.encode(encoding = "ascii"))
-    vals = []
     ser.write(enq)
     res = ''
     response = ser.read_until(b'\x03')  # Read until <ETX> character (ASCII code 3) is encountered#
@@ -49,10 +45,8 @@ def fur_send_command(device, baudrate, reading, command):
 
     substr = res[start_index:end_index]
     substr = float(substr)
-    vals.append(substr)       
-    response = vals
-    print (response)
-    vals = []     
+    response = substr
+    return response
 
 
 
@@ -68,28 +62,21 @@ def set_temp(temperature, elapsed_time, log_delay):
 
 def main():
     
-    #Call set_temp subroutine for each temperature setting
-    set_temp(10, 10, 10)  # Temperature: 10, Elapsed time: 10 seconds, Log delay: 10 seconds
-    fur_send_command(1,9600,'Temp','\x0401M200\x05{' )
+    #Create CSV file with headers
+    csv_file_path = "data.csv"
+    headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA", "Oven T"]
+
+    with open(csv_file_path, mode='w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=headers)
+        writer.writeheader()
+    
+    #set_temp(10, 10, 10)  # Temperature: 10, Elapsed time: 10 seconds, Log delay: 10 seconds
+    fur_send_command(1,'Temp','\x0401M200\x05{' )
+    Oven_T= response
+    print (Oven_T)
     #set_temp(20, 20, 10)  # Temperature: 20, Elapsed time: 20 seconds, Log delay: 10 seconds
    # set_temp(30, 30, 10)  # Temperature: 30, Elapsed time: 30 seconds, Log delay: 10 seconds
     #set_temp(20, 40, 10)  # Temperature: 20,
-
-
-
-    # Example script commands for device 1 (oven)
-    #send_command(1, "CMD c")  # Replace 'c' with your Fbus command for device 1
-    #response = read_response(1)
-    #print("Response from device 1:", response)
-
-    # Delay for 1 second
-
-    # Example script commands for device 7 (microcalibrator)
-    #send_command(7, "CMD c")  # Replace 'c' with your Fbus command for device 7
-    #response = read_response(7)
-    #print("Response from device 7:", response)
-
-    # Continue with other script commands for different devices...
 
 
 if __name__ == "__main__":
