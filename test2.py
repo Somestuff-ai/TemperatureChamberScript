@@ -3,6 +3,14 @@ import time
 import csv
 from datetime import datetime, timedelta
 
+
+csv_file_path = "data.csv"
+headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA", "Oven T"]
+with open(csv_file_path, mode='a', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(headers)
+step = 1
+
 # Define serial port parameters for each device
 SERIAL_PORTS = {
     1: {'port': 'COM3', 'baudrate': 9600},
@@ -81,15 +89,10 @@ def time_to_seconds(time_str):
 
 
 
-def run_stability_test(temperature, elapsed_time_check, sleep_seconds):
-        #Create CSV file with headers
-    csv_file_path = "data.csv"
-    headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA", "Oven T"]
-    
-    with open(csv_file_path, mode='a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(headers)
-    
+def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
+ 
+    global start_time
+
     set_temp(temperature)  # Temperature: 10, Elapsed time: 10 seconds, Log delay: 10 seconds
     
     start_time = datetime.now()
@@ -120,18 +123,90 @@ def run_stability_test(temperature, elapsed_time_check, sleep_seconds):
             break
 
         time.sleep(sleep_seconds)    
-    
-    
-    
+
+        
+    end_point_20rdgs(temperature)
+
     return
 
 
+def end_point_20rdgs(temperature):
+
+    with open(csv_file_path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([])
+        writer.writerow(["End Point Readings:"])
+
+    for i in range (20):    
+        ISOTECH_T = tt10_send_command()
+        sum_ISOTECH = sum_ISOTECH + ISOTECH_T
+        
+        WS504_T = fur_send_command(7, 'Temp', '\x0401L002\x05z')
+        sum_WS504_T = sum_WS504_T + WS504_T
+
+
+        EUT_mA = fur_send_command(7, 'mA','\x0401L002\x05z')
+        sum_EUT_mA = sum_EUT_mA + EUT_mA
+
+
+        Oven_T = fur_send_command(1,'Temp','\x0401M200\x05{' )
+    
+
+        current_time = datetime.now()
+        elapsed_time = current_time - start_time
+        current_time = current_time.strftime("%H:%M:%S")  
+
+        with open(csv_file_path, mode='a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA, Oven_T])  
+        
+  
+    
+    diff = round(abs( avg_ISOTECH_T - avg_WS504_T), 3)
+
+    avg_ISOTECH_T = round(sum_ISOTECH/20, 3)
+    avg_WS504_T = round(sum_WS504_T/20, 3)
+    avg_EUT_mA = round(sum_EUT_mA/20, 3)
+
+    sum_ISOTECH = 0
+    sum_WS504_T = 0
+    sum_EUT_mA = 0
+
+    # store averags based on step value
+    if step == 1:
+        avg_ISOTECH_10 = avg_ISOTECH_T
+        avg_WS504_10 = avg_WS504_T
+        avg_EUT_mA_10 = avg_EUT_mA
+    elif step == 2:
+        avg_ISOTECH_20 = avg_ISOTECH_T
+        avg_WS504_20 = avg_WS504_T
+        avg_EUT_mA_20 = avg_EUT_mA  
+    elif step == 3:
+        avg_ISOTECH_30 = avg_ISOTECH_T
+        avg_WS504_30 = avg_WS504_T
+        avg_EUT_mA_30 = avg_EUT_mA
+    elif step == 4:
+        avg_ISOTECH_30 = avg_ISOTECH_T
+        avg_WS504_30 = avg_WS504_T
+        avg_EUT_mA_30 = avg_EUT_mA
+        with open(csv_file_path, mode='a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([])
+            writer.writerow(["Average RS80", "Average EUTmA", "Check Difference", "Pass/Fail"]) 
+            
+             
+
+    step+=1
+
+    return      
+                             
+ 
 
 def main():
 
-    run_stability_test(10,"00:00:10", 1) # Example: Temperature: 10, Elapsed time check: 10 seconds, Sleep: 1 second
+    run_temperature_test(10,"00:00:10", 1) # Example: Temperature: 10, Elapsed time check: 10 seconds, Sleep: 1 second
+    run_temperature_test(20,"00:00:10",1 )
     
-
 
 
     #set_temp(20, 20, 10)  # Temperature: 20, Elapsed time: 20 seconds, Log delay: 10 seconds
