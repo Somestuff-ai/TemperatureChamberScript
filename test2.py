@@ -25,7 +25,6 @@ def send_command(device, command):
 
 # Function to read response from the relevant furness comport
 def fur_send_command(device, reading, command):
-    global response
     ser = serial_connections[device]
     enq = bytearray(command, 'ascii')
     ser.write(enq)
@@ -39,10 +38,10 @@ def fur_send_command(device, reading, command):
             end_index = res.find('b',start_index)            
     elif device == 7:
         if reading == 'Temp':
-            start_index = res.find('k', res.find('j')) + 1
+            start_index = res.find('k', res.find('Aux. Press.')) + 1
             end_index = res.find('l',start_index)
         elif reading == 'mA':
-            start_index = res.find('n', res.find('l')) + 1
+            start_index = res.find('n', res.find('EUT mA')) + 1
             end_index = res.find('o', start_index)
 
     substr = res[start_index:end_index]
@@ -74,10 +73,17 @@ def set_temp(temperature):
     #delay(elapsed_time)
 
 
+<<<<<<< Updated upstream
 def main():
     
     #Create CSV file with headers
     csv_file_path = "data.csv"
+=======
+
+def run_stability_test(temperature, elapsed_time_check, sleep_seconds):
+        #Create CSV file with headers
+    csv_file_path = "pythondata.csv"
+>>>>>>> Stashed changes
     headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA", "Oven T"]
     
     with open(csv_file_path, mode='a', newline='') as file:
@@ -89,32 +95,49 @@ def main():
     start_time = datetime.now()
     while True:
 
-        fur_send_command(1,'Temp','\x0401M200\x05{' )
-        Oven_T= response
+        Oven_T = fur_send_command(1,'Temp','\x0401M200\x05{' )
         print (Oven_T)
 
-        fur_send_command(7, 'Temp', '\x0401L002\x05z')
-        WS504_T = response
+        WS504_T = fur_send_command(7, 'Temp', '\x0401L002\x05z')
         print(WS504_T)
 
-        fur_send_command(7, 'mA','\x0401L002\x05z')
-        EUT_mA = response
+        EUT_mA = fur_send_command(7, 'mA','\x0401L002\x05z')
         print (EUT_mA)
 
-        tt10_send_command()
-        ISOTECH_T = response
+        ISOTECH_T = tt10_send_command()
         print(ISOTECH_T)
 
+<<<<<<< Updated upstream
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+=======
+        current_time = datetime.now()
+>>>>>>> Stashed changes
         elapsed_time = current_time - start_time
+        current_time = current_time.strftime("%H:%M:%S")
 
         with open(csv_file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([current_time, elapsed_time, Oven_T, WS504_T,EUT_mA,ISOTECH_T])
+            writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA, Oven_T])
         
         if elapsed_time >= 10:
             break
 
+<<<<<<< Updated upstream
+=======
+        time.sleep(sleep_seconds)    
+    
+    
+    
+    return
+
+
+
+def main():
+
+    run_stability_test(10,"00:00:20", 1) # Example: Temperature: 10, Elapsed time check: 10 seconds, Sleep: 1 second
+    
+
+>>>>>>> Stashed changes
 
 
     #set_temp(20, 20, 10)  # Temperature: 20, Elapsed time: 20 seconds, Log delay: 10 seconds
