@@ -73,17 +73,10 @@ def set_temp(temperature):
     #delay(elapsed_time)
 
 
-<<<<<<< Updated upstream
-def main():
-    
-    #Create CSV file with headers
-    csv_file_path = "data.csv"
-=======
 
 def run_stability_test(temperature, elapsed_time_check, sleep_seconds):
         #Create CSV file with headers
     csv_file_path = "pythondata.csv"
->>>>>>> Stashed changes
     headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA", "Oven T"]
     
     with open(csv_file_path, mode='a', newline='') as file:
@@ -107,11 +100,7 @@ def run_stability_test(temperature, elapsed_time_check, sleep_seconds):
         ISOTECH_T = tt10_send_command()
         print(ISOTECH_T)
 
-<<<<<<< Updated upstream
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-=======
         current_time = datetime.now()
->>>>>>> Stashed changes
         elapsed_time = current_time - start_time
         current_time = current_time.strftime("%H:%M:%S")
 
@@ -122,8 +111,6 @@ def run_stability_test(temperature, elapsed_time_check, sleep_seconds):
         if elapsed_time >= 10:
             break
 
-<<<<<<< Updated upstream
-=======
         time.sleep(sleep_seconds)    
     
     
@@ -137,7 +124,6 @@ def main():
     run_stability_test(10,"00:00:20", 1) # Example: Temperature: 10, Elapsed time check: 10 seconds, Sleep: 1 second
     
 
->>>>>>> Stashed changes
 
 
     #set_temp(20, 20, 10)  # Temperature: 20, Elapsed time: 20 seconds, Log delay: 10 seconds
