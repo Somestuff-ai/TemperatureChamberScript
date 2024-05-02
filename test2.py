@@ -1,7 +1,7 @@
 import serial
 import time
 import csv
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Define serial port parameters for each device
 SERIAL_PORTS = {
@@ -25,6 +25,7 @@ def send_command(device, command):
 
 # Function to read response from the relevant furness comport
 def fur_send_command(device, reading, command):
+    global response
     ser = serial_connections[device]
     enq = bytearray(command, 'ascii')
     ser.write(enq)
@@ -49,6 +50,8 @@ def fur_send_command(device, reading, command):
     response = substr
     return response
 
+
+
 def tt10_send_command():
     ser = serial_connections[device]
     enq = b'\x5c\xfc'
@@ -67,25 +70,30 @@ def set_temp(temperature):
     # Send command to set temperature
     command = f"\x0401v000a{temperature}\x03$"
     send_command(1, command)
-    
 
-    # Wait for specified elapsed time
-    #delay(elapsed_time)
+
+
+    
+def time_to_seconds(time_str):
+     # Convert time string in HH:MM:SS format to seconds
+    h, m, s = map(int, time_str.split(':'))
+    return h * 3600 + m * 60 + s   
 
 
 
 def run_stability_test(temperature, elapsed_time_check, sleep_seconds):
         #Create CSV file with headers
-    csv_file_path = "pythondata.csv"
+    csv_file_path = "data.csv"
     headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA", "Oven T"]
     
     with open(csv_file_path, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(headers)
     
-    set_temp(10)  # Temperature: 10, Elapsed time: 10 seconds, Log delay: 10 seconds
+    set_temp(temperature)  # Temperature: 10, Elapsed time: 10 seconds, Log delay: 10 seconds
     
     start_time = datetime.now()
+    elapsed_time_check_seconds = time_to_seconds(elapsed_time_check)
     while True:
 
         Oven_T = fur_send_command(1,'Temp','\x0401M200\x05{' )
@@ -108,7 +116,7 @@ def run_stability_test(temperature, elapsed_time_check, sleep_seconds):
             writer = csv.writer(file)
             writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA, Oven_T])
         
-        if elapsed_time >= 10:
+        if elapsed_time >= timedelta(seconds=elapsed_time_check_seconds):
             break
 
         time.sleep(sleep_seconds)    
@@ -121,7 +129,7 @@ def run_stability_test(temperature, elapsed_time_check, sleep_seconds):
 
 def main():
 
-    run_stability_test(10,"00:00:20", 1) # Example: Temperature: 10, Elapsed time check: 10 seconds, Sleep: 1 second
+    run_stability_test(10,"00:00:10", 1) # Example: Temperature: 10, Elapsed time check: 10 seconds, Sleep: 1 second
     
 
 
