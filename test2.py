@@ -53,6 +53,7 @@ def enquiry_check_sum(enquiry):
 
     # The final string comprises an <EOT> character, the command then the BCC
     CommsCommand = chr(EOT) + CommsCommand + chr(BCC)
+    return CommsCommand
         
 
 
@@ -65,7 +66,7 @@ def send_command(device, command):
 # Function to read response from the relevant furness comport
 def fur_send_enquiry(device, reading, enquiry):
     global response
-    enquiry_check_sum(enquiry)
+    enquiry = enquiry_check_sum(enquiry)
     ser = serial_connections[device]
     enq = bytearray(enquiry, 'ascii')
     ser.write(enq)
@@ -106,13 +107,12 @@ def tt10_send_command():
     return response
     
 
-# def set_temp(temperature):
-#     # Send command to set temperature
-#     if temperature == 10:
-#         command = f"\x0401v000a{temperature}\x03$"
-#         send_command(1, command)
-#     if temperature == 20:
-#         command =     
+def set_temp(temperature):
+    # Send command to set temperature
+    if temperature == 10:
+        command = f"\x0401v000a{temperature}\x03$"
+        send_command(1, command)
+
 
 
 
