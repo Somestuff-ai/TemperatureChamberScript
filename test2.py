@@ -25,6 +25,37 @@ for device, params in SERIAL_PORTS.items():
 
 # Define functions for script commands
 
+def command_check_sum(command):
+    ETX = 3
+    EOT = 4
+
+    CommsCommand = "01v000a20" + chr(ETX)
+
+    # Calculate the checksum BCC for CommsCommand
+    BCC = 0
+    for char in CommsCommand:
+        BCC ^= ord(char)
+
+    # The final string comprises an <EOT> character, the command then the BCC
+    CommsCommand = chr(EOT) + CommsCommand + chr(BCC)
+   
+
+def enquiry_check_sum(enquiry):
+    ENQ = 5
+    EOT = 4
+
+    CommsCommand = enquiry + chr(ENQ)
+
+    # Calculate the checksum BCC for CommsCommand
+    BCC = 0
+    for char in CommsCommand:
+        BCC ^= ord(char)
+
+    # The final string comprises an <EOT> character, the command then the BCC
+    CommsCommand = chr(EOT) + CommsCommand + chr(BCC)
+        
+
+
 def send_command(device, command):
     # Send command over serial for specified device
     serial_connections[device].write(command.encode(encoding = "ascii"))
@@ -32,10 +63,11 @@ def send_command(device, command):
 
 
 # Function to read response from the relevant furness comport
-def fur_send_command(device, reading, command):
+def fur_send_enquiry(device, reading, enquiry):
     global response
+    enquiry_check_sum(enquiry)
     ser = serial_connections[device]
-    enq = bytearray(command, 'ascii')
+    enq = bytearray(enquiry, 'ascii')
     ser.write(enq)
     res = ''
     response = ser.read_until(b'\x03')  # Read until <ETX> character (ASCII code 3) is encountered#
@@ -74,10 +106,13 @@ def tt10_send_command():
     return response
     
 
-def set_temp(temperature):
-    # Send command to set temperature
-    command = f"\x0401v000a{temperature}\x03$"
-    send_command(1, command)
+# def set_temp(temperature):
+#     # Send command to set temperature
+#     if temperature == 10:
+#         command = f"\x0401v000a{temperature}\x03$"
+#         send_command(1, command)
+#     if temperature == 20:
+#         command =     
 
 
 
@@ -99,13 +134,14 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
     elapsed_time_check_seconds = time_to_seconds(elapsed_time_check)
     while True:
 
-        Oven_T = fur_send_command(1,'Temp','\x0401M200\x05{' )
+        # Oven_T = fur_send_command(1,'Temp','\x0401M200\x05{' )
+        Oven_T = fur_send_enquiry(1,'Temp','01M200' )
         print (Oven_T)
 
-        WS504_T = fur_send_command(7, 'Temp', '\x0401L002\x05z')
+        WS504_T = fur_send_enquiry(7, 'Temp', '\x0401L002\x05z')
         print(WS504_T)
 
-        EUT_mA = fur_send_command(7, 'mA','\x0401L002\x05z')
+        EUT_mA = fur_send_enquiry(7, 'mA','\x0401L002\x05z')
         print (EUT_mA)
 
         ISOTECH_T = tt10_send_command()
@@ -141,15 +177,15 @@ def end_point_20rdgs(temperature):
         ISOTECH_T = tt10_send_command()
         sum_ISOTECH = sum_ISOTECH + ISOTECH_T
         
-        WS504_T = fur_send_command(7, 'Temp', '\x0401L002\x05z')
+        WS504_T = fur_send_enquiry(7, 'Temp', '\x0401L002\x05z')
         sum_WS504_T = sum_WS504_T + WS504_T
 
 
-        EUT_mA = fur_send_command(7, 'mA','\x0401L002\x05z')
+        EUT_mA = fur_send_enquiry(7, 'mA','\x0401L002\x05z')
         sum_EUT_mA = sum_EUT_mA + EUT_mA
 
 
-        Oven_T = fur_send_command(1,'Temp','\x0401M200\x05{' )
+        Oven_T = fur_send_enquiry(1,'Temp','\x0401M200\x05{' )
     
 
         current_time = datetime.now()
