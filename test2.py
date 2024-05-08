@@ -29,22 +29,7 @@ def command_check_sum(command):
     ETX = 3
     EOT = 4
 
-    CommsCommand = "01v000a20" + chr(ETX)
-
-    # Calculate the checksum BCC for CommsCommand
-    BCC = 0
-    for char in CommsCommand:
-        BCC ^= ord(char)
-
-    # The final string comprises an <EOT> character, the command then the BCC
-    CommsCommand = chr(EOT) + CommsCommand + chr(BCC)
-   
-
-def enquiry_check_sum(enquiry):
-    ENQ = 5
-    EOT = 4
-
-    CommsCommand = enquiry + chr(ENQ)
+    CommsCommand = command + chr(ETX)
 
     # Calculate the checksum BCC for CommsCommand
     BCC = 0
@@ -54,6 +39,22 @@ def enquiry_check_sum(enquiry):
     # The final string comprises an <EOT> character, the command then the BCC
     CommsCommand = chr(EOT) + CommsCommand + chr(BCC)
     return CommsCommand
+   
+
+def enquiry_check_sum(enquiry):
+    ENQ = 5
+    EOT = 4
+
+    CommsEnquiry = enquiry + chr(ENQ)
+
+    # Calculate the checksum BCC for CommsCommand
+    BCC = 0
+    for char in CommsEnquiry:
+        BCC ^= ord(char)
+
+    # The final string comprises an <EOT> character, the command then the BCC
+    CommsEnquiry = chr(EOT) + CommsEnquiry + chr(BCC)
+    return CommsEnquiry
         
 
 
@@ -91,6 +92,13 @@ def fur_send_enquiry(device, reading, enquiry):
     response = substr
     return response
 
+def fur_send_command(command):
+    command = command_check_sum(command)
+    ser = serial_connections[device]
+    comm  = bytearray(command, 'ascii')
+    ser.write(command)
+
+    return
 
 
 def tt10_send_command():
@@ -110,8 +118,11 @@ def tt10_send_command():
 def set_temp(temperature):
     # Send command to set temperature
     if temperature == 10:
-        command = f"\x0401v000a{temperature}\x03$"
-        send_command(1, command)
+        # command = f"\x0401v000a{temperature}\x03$"
+        # send_command(1, command)
+        command = f"01v000a{temperature}"
+     
+
 
 
 
@@ -128,7 +139,9 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
  
     global start_time
 
-    set_temp(temperature)  # Temperature: 10, Elapsed time: 10 seconds, Log delay: 10 seconds
+    fur_send_command('01v000a{temperature}')
+
+    #set_temp(temperature)  # Temperature: 10, Elapsed time: 10 seconds, Log delay: 10 seconds
     
     start_time = datetime.now()
     elapsed_time_check_seconds = time_to_seconds(elapsed_time_check)
@@ -138,10 +151,12 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
         Oven_T = fur_send_enquiry(1,'Temp','01M200' )
         print (Oven_T)
 
-        WS504_T = fur_send_enquiry(7, 'Temp', '\x0401L002\x05z')
+        # WS504_T = fur_send_enquiry(7, 'Temp', '\x0401L002\x05z')
+        WS504_T = fur_send_enquiry(7, 'Temp', '01L002')
         print(WS504_T)
 
-        EUT_mA = fur_send_enquiry(7, 'mA','\x0401L002\x05z')
+        # EUT_mA = fur_send_enquiry(7, 'mA','\x0401L002\x05z')
+        EUT_mA = fur_send_enquiry(7, 'mA','01L002')
         print (EUT_mA)
 
         ISOTECH_T = tt10_send_command()
