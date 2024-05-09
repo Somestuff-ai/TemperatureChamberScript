@@ -1,6 +1,6 @@
 
-import serial
-import time
+# import serial
+# import time
 # ser = serial.Serial ('COM3',9600)
 
 # enq = bytearray('\x0401M200\x05{', 'ascii') #Oven Temperature a-b
@@ -64,32 +64,32 @@ import time
 
 
 
-# Open serial port
-ser = serial.Serial('COM14', 2400)  
+# # Open serial port
+# ser = serial.Serial('COM14', 2400)  
 
-# Define the communication string
-communication_string = b'\x5c\xfc'  # This includes the escape backslash
+# # Define the communication string
+# communication_string = b'\x5c\xfc'  # This includes the escape backslash
 
-# Send the communication string
-ser.write(communication_string)
+# # Send the communication string
+# ser.write(communication_string)
 
-# Wait for 1000 ms (1 second)
-time.sleep(1)
+# # Wait for 1000 ms (1 second)
+# time.sleep(1)
 
-# Read response
-response = ser.read_all()
+# # Read response
+# response = ser.read_all()
 
-response_str = response.decode('utf-8')
-numerical_value = response_str[2:8]
-
-
-print("Extracted value:", numerical_value)
+# response_str = response.decode('utf-8')
+# numerical_value = response_str[2:8]
 
 
-print("Response:", response)
+# print("Extracted value:", numerical_value)
 
-# Close the serial port
-ser.close()
+
+# print("Response:", response)
+
+# # Close the serial port
+# ser.close()
 
 
 
@@ -131,3 +131,14 @@ ser.close()
 #     print(isotech)
 
 
+import pyautogui
+
+# Find the location of the button on the screen
+button_location = pyautogui.locateOnScreen('button_image.png')
+
+# If button not found, print an error message
+if button_location is None:
+    print("Button not found.")
+else:
+    # Click the button
+    pyautogui.click(button_location)
