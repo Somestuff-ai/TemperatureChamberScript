@@ -92,11 +92,11 @@ def fur_send_enquiry(device, reading, enquiry):
     response = substr
     return response
 
-def fur_send_command(command):
+def fur_send_command(device, command):
     command = command_check_sum(command)
     ser = serial_connections[device]
     comm  = bytearray(command, 'ascii')
-    ser.write(command)
+    ser.write(comm)
 
     return
 
@@ -139,7 +139,7 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
  
     global start_time
 
-    fur_send_command('01v000a{temperature}')
+    fur_send_command(1, f'01v000a{temperature}')
 
     #set_temp(temperature)  # Temperature: 10, Elapsed time: 10 seconds, Log delay: 10 seconds
     
@@ -192,15 +192,15 @@ def end_point_20rdgs(temperature):
         ISOTECH_T = tt10_send_command()
         sum_ISOTECH = sum_ISOTECH + ISOTECH_T
         
-        WS504_T = fur_send_enquiry(7, 'Temp', '\x0401L002\x05z')
+        WS504_T = fur_send_enquiry(7, 'Temp', '01L002')
         sum_WS504_T = sum_WS504_T + WS504_T
 
 
-        EUT_mA = fur_send_enquiry(7, 'mA','\x0401L002\x05z')
+        EUT_mA = fur_send_enquiry(7, 'mA','01L002')
         sum_EUT_mA = sum_EUT_mA + EUT_mA
 
 
-        Oven_T = fur_send_enquiry(1,'Temp','\x0401M200\x05{' )
+        Oven_T = fur_send_enquiry(1,'Temp','01M200' )
     
 
         current_time = datetime.now()
