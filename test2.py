@@ -101,7 +101,7 @@ def fur_send_command(device, command):
     return
 
 
-def tt10_send_command():
+def tt10_send_enquiry():
     ser = serial_connections[device]
     enq = b'\x5c\xfc'
     ser.write(enq)
@@ -159,7 +159,7 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
         EUT_mA = fur_send_enquiry(7, 'mA','01L002')
         print (EUT_mA)
 
-        ISOTECH_T = tt10_send_command()
+        ISOTECH_T = tt10_send_enquiry()
         print(ISOTECH_T)
 
         current_time = datetime.now()
@@ -189,7 +189,7 @@ def end_point_20rdgs(temperature):
         writer.writerow(["End Point Readings:"])
 
     for i in range (20):    
-        ISOTECH_T = tt10_send_command()
+        ISOTECH_T = tt10_send_enquiry()
         sum_ISOTECH = sum_ISOTECH + ISOTECH_T
         
         WS504_T = fur_send_enquiry(7, 'Temp', '01L002')
@@ -225,21 +225,21 @@ def end_point_20rdgs(temperature):
 
     # store averags based on step value
     if step == 1:
-        avg_ISOTECH_10 = avg_ISOTECH_T
-        avg_WS504_10 = avg_WS504_T
-        avg_EUT_mA_10 = avg_EUT_mA
+        avg_ISOTECH_1 = avg_ISOTECH_T
+        avg_WS504_1 = avg_WS504_T
+        avg_EUT_mA_1 = avg_EUT_mA
     elif step == 2:
-        avg_ISOTECH_20 = avg_ISOTECH_T
-        avg_WS504_20 = avg_WS504_T
-        avg_EUT_mA_20 = avg_EUT_mA  
+        avg_ISOTECH_2 = avg_ISOTECH_T
+        avg_WS504_2 = avg_WS504_T
+        avg_EUT_mA_2 = avg_EUT_mA  
     elif step == 3:
-        avg_ISOTECH_30 = avg_ISOTECH_T
-        avg_WS504_30 = avg_WS504_T
-        avg_EUT_mA_30 = avg_EUT_mA
+        avg_ISOTECH_3 = avg_ISOTECH_T
+        avg_WS504_3 = avg_WS504_T
+        avg_EUT_mA_3 = avg_EUT_mA
     elif step == 4:
-        avg_ISOTECH_30 = avg_ISOTECH_T
-        avg_WS504_30 = avg_WS504_T
-        avg_EUT_mA_30 = avg_EUT_mA
+        avg_ISOTECH_4 = avg_ISOTECH_T
+        avg_WS504_4 = avg_WS504_T
+        avg_EUT_mA_4 = avg_EUT_mA
         with open(csv_file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([])
