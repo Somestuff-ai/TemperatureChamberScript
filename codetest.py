@@ -147,6 +147,7 @@ import time
 import ctypes
 import win32gui
 import win32api
+import win32con
 import pyautogui
 
 # Callback function for window enumeration
@@ -155,6 +156,7 @@ def EnumWindowCallback(hwnd, lParam):
     text = win32gui.GetWindowText(hwnd)
     if "Calibration entry sheet" in text:
         HWND_CalSheet = hwnd
+
         return False
     return True
 
@@ -169,17 +171,18 @@ def take_measurement(hwnd_cal_sheet, hwnd_take_meas):
 def take_cs043_reading():
     global HWND_CalSheet
     HWND_CalSheet = 0
-    win32gui.EnumWindows(EnumWindowCallback, 0)
-
-    if HWND_CalSheet != 0:
-        hwnd_take_meas = win32gui.FindWindowEx(HWND_CalSheet, 0, None, "Take Measurement")
-        if hwnd_take_meas != 0:
-            take_measurement(HWND_CalSheet, hwnd_take_meas)
-            time.sleep(0.4)
-            text = ""
-            while not text.startswith("Take"):
-                time.sleep(0.2)
-                win32gui.SendMessage(hwnd_take_meas, win32con.WM_GETTEXT, 18, text)
+    try:
+        win32gui.EnumWindows(EnumWindowCallback, 0)
+    except:
+        if HWND_CalSheet != 0:
+            hwnd_take_meas = win32gui.FindWindowEx(HWND_CalSheet, 0, None, "Take Measurement")
+            if hwnd_take_meas != 0:
+                take_measurement(HWND_CalSheet, hwnd_take_meas)
+                time.sleep(0.4)
+                text = ""
+                while not text.startswith("Take"):
+                    time.sleep(0.2)
+                    win32gui.SendMessage(hwnd_take_meas, win32con.WM_GETTEXT, 18, text)
             # Button is enabled again, measurement process completed
 
 # Entry point
