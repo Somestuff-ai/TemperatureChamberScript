@@ -60,34 +60,34 @@ def time_to_seconds(time_str):
 
 def end_point_20rdgs(temperature, step):
 
-    sum_ISOTECH = 0
-    sum_WS504_T = 0
-    sum_EUT_mA = 0
+    # sum_ISOTECH = 0
+    # sum_WS504_T = 0
+    # sum_EUT_mA = 0
 
-    avg_ISOTECH_1 = 0
-    avg_ISOTECH_2 = 0
-    avg_ISOTECH_3 = 0
-    avg_ISOTECH_4 = 0
+    # avg_ISOTECH_1 = 0
+    # avg_ISOTECH_2 = 0
+    # avg_ISOTECH_3 = 0
+    # avg_ISOTECH_4 = 0
 
-    avg_WS504_1 = 0
-    avg_WS504_2 = 0
-    avg_WS504_3 = 0
-    avg_WS504_4 = 0
+    # avg_WS504_1 = 0
+    # avg_WS504_2 = 0
+    # avg_WS504_3 = 0
+    # avg_WS504_4 = 0
 
-    avg_EUT_mA_1 = 0
-    avg_EUT_mA_2 = 0 
-    avg_EUT_mA_3 = 0
-    avg_EUT_mA_4 = 0
+    # avg_EUT_mA_1 = 0
+    # avg_EUT_mA_2 = 0 
+    # avg_EUT_mA_3 = 0
+    # avg_EUT_mA_4 = 0
 
-    diff_1 = 0
-    diff_2 = 0
-    diff_3 = 0
-    diff_4 = 0
+    # diff_1 = 0
+    # diff_2 = 0
+    # diff_3 = 0
+    # diff_4 = 0
 
-    condition_1 = 0
-    condition_2 = 0
-    condition_3 = 0
-    condition_4 = 0
+    # condition_1 = 0
+    # condition_2 = 0
+    # condition_3 = 0
+    # condition_4 = 0
 
 
 
