@@ -151,40 +151,54 @@ import win32con
 import pyautogui
 
 # Callback function for window enumeration
-def EnumWindowCallback(hwnd, lParam):
-    global HWND_CalSheet
-    text = win32gui.GetWindowText(hwnd)
-    if "Calibration entry sheet" in text:
-        HWND_CalSheet = hwnd
+# def EnumWindowCallback(hwnd, lParam):
+#     global HWND_CalSheet
+#     text = win32gui.GetWindowText(hwnd)
+#     if "Calibration entry sheet" in text:
+#         HWND_CalSheet = hwnd
 
-        return False
-    return True
+#         return False
+#     return True
 
-# Simulate clicking on "Take Measurements" button
-def take_measurement(hwnd_cal_sheet, hwnd_take_meas):
-    rect = win32gui.GetWindowRect(hwnd_take_meas)
-    center_x = (rect[0] + rect[2]) // 2
-    center_y = (rect[1] + rect[3]) // 2
-    pyautogui.click(center_x, center_y)
+# # Simulate clicking on "Take Measurements" button
+# def take_measurement(hwnd_cal_sheet, hwnd_take_meas):
+#     rect = win32gui.GetWindowRect(hwnd_take_meas)
+#     center_x = (rect[0] + rect[2]) // 2
+#     center_y = (rect[1] + rect[3]) // 2
+#     pyautogui.click(center_x, center_y)
 
-# Main function to take CS043 reading
-def take_cs043_reading():
-    global HWND_CalSheet
-    HWND_CalSheet = 0
-    try:
-        win32gui.EnumWindows(EnumWindowCallback, 0)
-    except:
-        if HWND_CalSheet != 0:
-            hwnd_take_meas = win32gui.FindWindowEx(HWND_CalSheet, 0, None, "Take Measurement")
-            if hwnd_take_meas != 0:
-                take_measurement(HWND_CalSheet, hwnd_take_meas)
-                time.sleep(0.4)
-                text = ""
-                while not text.startswith("Take"):
-                    time.sleep(0.2)
-                    win32gui.SendMessage(hwnd_take_meas, win32con.WM_GETTEXT, 18, text)
-            # Button is enabled again, measurement process completed
+# # Main function to take CS043 reading
+# def take_cs043_reading():
+#     global HWND_CalSheet
+#     HWND_CalSheet = 0
+#     try:
+#         win32gui.EnumWindows(EnumWindowCallback, 0)
+#     except:
+#         if HWND_CalSheet != 0:
+#             hwnd_take_meas = win32gui.FindWindowEx(HWND_CalSheet, 0, None, "Take Measurement")
+#             if hwnd_take_meas != 0:
+#                 take_measurement(HWND_CalSheet, hwnd_take_meas)
+#                 time.sleep(0.4)
+#                 text = ""
+#                 while not text.startswith("Take"):
+#                     time.sleep(0.2)
+#                     win32gui.SendMessage(hwnd_take_meas, win32con.WM_GETTEXT, 18, text)
+#             # Button is enabled again, measurement process completed
 
-# Entry point
-if __name__ == "__main__":
-    take_cs043_reading()
+# # Entry point
+# if __name__ == "__main__":
+#     take_cs043_reading()
+
+data = 'aa10.56b21.48c20.62d20.76e21.92f10.0g25265h26172i26063j25993k1l0m0n0o-42.7p-44.2q-44.2\x03'
+
+# Find the index of 'b'
+
+
+# Find the index of 'a' before 'b'
+a_index = data.rfind('a') + 1
+b_index = data.find('b', a_index)
+# Extract the value between 'a' and 'b'
+# start_index = data.rfind('a') + 1
+# end_index = res.find('b',start_index)  
+value = float(data[a_index:b_index])
+print(value)

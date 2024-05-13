@@ -1,18 +1,16 @@
-from main import start_time
 from initialise import csv_file_path, serial_connections, device
 import time
 import csv
 from datetime import datetime, timedelta
 
-
 step = 1
-
+start_time = datetime.now()
 
 # Define functions for script commands
 
 def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
  
-
+    global step
 
     fur_send_command(1, f'01v000a{temperature}')
 
@@ -49,8 +47,8 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
 
         time.sleep(sleep_seconds)    
 
-        
-    end_point_20rdgs(temperature)
+    
+    step = end_point_20rdgs(temperature, step)
 
     return
 
@@ -60,7 +58,38 @@ def time_to_seconds(time_str):
     return h * 3600 + m * 60 + s   
 
 
-def end_point_20rdgs(temperature):
+def end_point_20rdgs(temperature, step):
+
+    sum_ISOTECH = 0
+    sum_WS504_T = 0
+    sum_EUT_mA = 0
+
+    avg_ISOTECH_1 = 0
+    avg_ISOTECH_2 = 0
+    avg_ISOTECH_3 = 0
+    avg_ISOTECH_4 = 0
+
+    avg_WS504_1 = 0
+    avg_WS504_2 = 0
+    avg_WS504_3 = 0
+    avg_WS504_4 = 0
+
+    avg_EUT_mA_1 = 0
+    avg_EUT_mA_2 = 0 
+    avg_EUT_mA_3 = 0
+    avg_EUT_mA_4 = 0
+
+    diff_1 = 0
+    diff_2 = 0
+    diff_3 = 0
+    diff_4 = 0
+
+    condition_1 = 0
+    condition_2 = 0
+    condition_3 = 0
+    condition_4 = 0
+
+
 
     with open(csv_file_path, mode='a', newline='') as file:
         writer = csv.writer(file)
@@ -68,14 +97,14 @@ def end_point_20rdgs(temperature):
         writer.writerow(["End Point Readings:"])
 
     for i in range (20):    
-        ISOTECH_T = tt10_send_enquiry()
+        ISOTECH_T = float(tt10_send_enquiry())
         sum_ISOTECH = sum_ISOTECH + ISOTECH_T
         
-        WS504_T = fur_send_enquiry(7, 'Temp', '01L002')
+        WS504_T = float(fur_send_enquiry(7, 'Temp', '01L002'))
         sum_WS504_T = sum_WS504_T + WS504_T
 
 
-        EUT_mA = fur_send_enquiry(7, 'mA','01L002')
+        EUT_mA = float(fur_send_enquiry(7, 'mA','01L002'))
         sum_EUT_mA = sum_EUT_mA + EUT_mA
 
 
@@ -89,14 +118,15 @@ def end_point_20rdgs(temperature):
         with open(csv_file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA, Oven_T])  
-        
-  
     
-    diff = round(abs( avg_ISOTECH_T - avg_WS504_T), 3)
+    with open(csv_file_path, mode='a', newline='') as file:    
+        writer = csv.writer(file)
+        writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA, Oven_T])  
 
     avg_ISOTECH_T = round(sum_ISOTECH/20, 3)
     avg_WS504_T = round(sum_WS504_T/20, 3)
     avg_EUT_mA = round(sum_EUT_mA/20, 3)
+    diff = round(abs( avg_ISOTECH_T - avg_WS504_T), 3)
 
     sum_ISOTECH = 0
     sum_WS504_T = 0
@@ -157,7 +187,7 @@ def end_point_20rdgs(temperature):
 
     step+=1
 
-    return      
+    return step     
 
 
 
@@ -209,7 +239,7 @@ def fur_send_enquiry(device, reading, enquiry):
 
     if device == 1:
         if reading == 'Temp':
-            start_index = res.find('a') + 1
+            start_index = res.rfind('a') + 1
             end_index = res.find('b',start_index)            
     elif device == 7:
         if reading == 'Temp':
