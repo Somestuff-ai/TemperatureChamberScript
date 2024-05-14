@@ -4,6 +4,30 @@ import csv
 from datetime import datetime, timedelta
 
 step = 1
+avg_ISOTECH_1 = 0
+avg_ISOTECH_2 = 0
+avg_ISOTECH_3 = 0
+avg_ISOTECH_4 = 0
+
+avg_WS504_1 = 0
+avg_WS504_2 = 0
+avg_WS504_3 = 0
+avg_WS504_4 = 0
+
+avg_EUT_mA_1 = 0
+avg_EUT_mA_2 = 0 
+avg_EUT_mA_3 = 0
+avg_EUT_mA_4 = 0
+
+diff_1 = 0
+diff_2 = 0
+diff_3 = 0
+diff_4 = 0
+
+condition_1 = 0
+condition_2 = 0
+condition_3 = 0
+condition_4 = 0
 start_time = datetime.now()
 
 # Define functions for script commands
@@ -48,7 +72,7 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
         time.sleep(sleep_seconds)    
 
     
-    step = end_point_20rdgs(temperature, step)
+    end_point_20rdgs(temperature)
 
     return
 
@@ -58,11 +82,17 @@ def time_to_seconds(time_str):
     return h * 3600 + m * 60 + s   
 
 
-def end_point_20rdgs(temperature, step):
+def end_point_20rdgs(temperature):
+    global step
+    global avg_EUT_mA_1, avg_EUT_mA_2, avg_EUT_mA_3, avg_EUT_mA_4
+    global avg_ISOTECH_1, avg_ISOTECH_2, avg_ISOTECH_3, avg_ISOTECH_4
+    global avg_WS504_1, avg_WS504_2, avg_WS504_3, avg_WS504_4
+    global diff_1, diff_2, diff_3, diff_4
+    global condition_1, condition_2, condition_3, condition_4
 
-    # sum_ISOTECH = 0
-    # sum_WS504_T = 0
-    # sum_EUT_mA = 0
+    sum_ISOTECH = 0
+    sum_WS504_T = 0
+    sum_EUT_mA = 0
 
     # avg_ISOTECH_1 = 0
     # avg_ISOTECH_2 = 0
@@ -96,7 +126,7 @@ def end_point_20rdgs(temperature, step):
         writer.writerow([])
         writer.writerow(["End Point Readings:"])
 
-    for i in range (20):    
+    for i in range (19):    
         ISOTECH_T = float(tt10_send_enquiry())
         sum_ISOTECH = sum_ISOTECH + ISOTECH_T
         
@@ -141,7 +171,9 @@ def end_point_20rdgs(temperature, step):
         if diff_1 > 0.1:
             condition_1 = "Fail"
         else:
-            condition_1 = "Pass"   
+            condition_1 = "Pass"
+        step += 1
+        return avg_ISOTECH_1, avg_WS504_1, avg_EUT_mA_1, diff_1, condition_1, step       
 
     elif step == 2:
         avg_ISOTECH_2 = avg_ISOTECH_T
@@ -152,7 +184,9 @@ def end_point_20rdgs(temperature, step):
             condition_2 = "Fail"
         else:
             condition_2 = "Pass"
-
+        step += 1
+        return avg_ISOTECH_2, avg_WS504_2, avg_EUT_mA_2, diff_2, condition_2, step
+    
     elif step == 3:
         avg_ISOTECH_3 = avg_ISOTECH_T
         avg_WS504_3 = avg_WS504_T
@@ -162,7 +196,9 @@ def end_point_20rdgs(temperature, step):
             condition_3 = "Fail"
         else:
             condition_3 = "Pass"
-
+        step += 1
+        return avg_ISOTECH_3, avg_WS504_3, avg_EUT_mA_3, diff_3, condition_3, step
+    
     elif step == 4:
         avg_ISOTECH_4 = avg_ISOTECH_T
         avg_WS504_4 = avg_WS504_T
@@ -182,12 +218,7 @@ def end_point_20rdgs(temperature, step):
             writer.writerow([avg_ISOTECH_3, avg_WS504_3, avg_EUT_mA_3, diff_3, condition_3])
             writer.writerow([avg_ISOTECH_4, avg_WS504_4, avg_EUT_mA_4, diff_4, condition_4]) 
 
-            
-             
-
-    step+=1
-
-    return step     
+    return    
 
 
 
