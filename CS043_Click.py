@@ -39,7 +39,8 @@ def take_cs043_reading():
                     time.sleep(0.2)
                     win32gui.SendMessage(hwnd_take_meas, win32con.WM_GETTEXT, 18, text)
 #             # Button is enabled again, measurement process completed
+    return
 
 # Entry point
-if __name__ == "__main__":
-    take_cs043_reading()
+# if __name__ == "__main__":
+#     take_cs043_reading()

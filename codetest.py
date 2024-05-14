@@ -186,19 +186,19 @@ def take_cs043_reading():
 #             # Button is enabled again, measurement process completed
 
 # # Entry point
-# if __name__ == "__main__":
-#     take_cs043_reading()
+if __name__ == "__main__":
+    take_cs043_reading()
 
-data = 'aa10.56b21.48c20.62d20.76e21.92f10.0g25265h26172i26063j25993k1l0m0n0o-42.7p-44.2q-44.2\x03'
+# data = 'aa10.56b21.48c20.62d20.76e21.92f10.0g25265h26172i26063j25993k1l0m0n0o-42.7p-44.2q-44.2\x03'
 
-# Find the index of 'b'
+# # Find the index of 'b'
 
 
-# Find the index of 'a' before 'b'
-a_index = data.rfind('a') + 1
-b_index = data.find('b', a_index)
-# Extract the value between 'a' and 'b'
-# start_index = data.rfind('a') + 1
-# end_index = res.find('b',start_index)  
-value = float(data[a_index:b_index])
-print(value)
+# # Find the index of 'a' before 'b'
+# a_index = data.rfind('a') + 1
+# b_index = data.find('b', a_index)
+# # Extract the value between 'a' and 'b'
+# # start_index = data.rfind('a') + 1
+# # end_index = res.find('b',start_index)  
+# value = float(data[a_index:b_index])
+# print(value)
