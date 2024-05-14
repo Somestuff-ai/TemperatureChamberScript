@@ -119,9 +119,9 @@ def end_point_20rdgs(temperature, step):
             writer = csv.writer(file)
             writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA, Oven_T])  
     
-    with open(csv_file_path, mode='a', newline='') as file:    
-        writer = csv.writer(file)
-        writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA, Oven_T])  
+    # with open(csv_file_path, mode='a', newline='') as file:    
+    #     writer = csv.writer(file)
+    #     writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA, Oven_T])  
 
     avg_ISOTECH_T = round(sum_ISOTECH/20, 3)
     avg_WS504_T = round(sum_WS504_T/20, 3)
