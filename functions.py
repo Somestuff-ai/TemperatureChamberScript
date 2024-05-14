@@ -34,8 +34,7 @@ start_time = datetime.now()
 # Define functions for script commands
 
 def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
- 
-    global step
+    global start_time
 
     fur_send_command(1, f'01v000a{temperature}')
 
