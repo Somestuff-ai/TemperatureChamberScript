@@ -21,3 +21,6 @@ SERIAL_PORTS = {
 serial_connections = {} 
 for device, params in SERIAL_PORTS.items():
     serial_connections[device] = serial.Serial(params['port'], params['baudrate'], timeout=1)
+
+
+

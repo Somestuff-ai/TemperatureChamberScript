@@ -1,4 +1,5 @@
 from initialise import csv_file_path, serial_connections, device
+from CS043_Click import take_cs043_reading
 import time
 import csv
 from datetime import datetime, timedelta
@@ -71,9 +72,9 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
 
         time.sleep(sleep_seconds)    
 
-    
+    take_cs043_reading()
     end_point_20rdgs(temperature)
-
+    
     return
 
 def time_to_seconds(time_str):
@@ -93,33 +94,6 @@ def end_point_20rdgs(temperature):
     sum_ISOTECH = 0
     sum_WS504_T = 0
     sum_EUT_mA = 0
-
-    # avg_ISOTECH_1 = 0
-    # avg_ISOTECH_2 = 0
-    # avg_ISOTECH_3 = 0
-    # avg_ISOTECH_4 = 0
-
-    # avg_WS504_1 = 0
-    # avg_WS504_2 = 0
-    # avg_WS504_3 = 0
-    # avg_WS504_4 = 0
-
-    # avg_EUT_mA_1 = 0
-    # avg_EUT_mA_2 = 0 
-    # avg_EUT_mA_3 = 0
-    # avg_EUT_mA_4 = 0
-
-    # diff_1 = 0
-    # diff_2 = 0
-    # diff_3 = 0
-    # diff_4 = 0
-
-    # condition_1 = 0
-    # condition_2 = 0
-    # condition_3 = 0
-    # condition_4 = 0
-
-
 
     with open(csv_file_path, mode='a', newline='') as file:
         writer = csv.writer(file)
@@ -148,10 +122,7 @@ def end_point_20rdgs(temperature):
         with open(csv_file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA, Oven_T])  
-    
-    # with open(csv_file_path, mode='a', newline='') as file:    
-    #     writer = csv.writer(file)
-    #     writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA, Oven_T])  
+     
 
     avg_ISOTECH_T = round(sum_ISOTECH/20, 3)
     avg_WS504_T = round(sum_WS504_T/20, 3)
@@ -255,8 +226,6 @@ def enquiry_check_sum(enquiry):
     return CommsEnquiry
         
 
-
-
 # Functions to send enquiries and read responses 
 def fur_send_enquiry(device, reading, enquiry):
     global response
@@ -298,7 +267,7 @@ def tt10_send_enquiry():
 
     return response
  
-# Functionns to send commands
+# Functions to send commands
 def fur_send_command(device, command):
     command = command_check_sum(command)
     ser = serial_connections[device]
