@@ -251,6 +251,9 @@ def fur_send_enquiry(device, reading, enquiry):
     substr = res[start_index:end_index]
     substr = float(substr)
     response = substr
+
+    ser.close()
+
     return response
 
 def tt10_send_enquiry():
@@ -264,6 +267,8 @@ def tt10_send_enquiry():
     substr = response.decode('utf-8')
     response = substr[2:8]
 
+    ser.close()
+
     return response
  
 # Functions to send commands
@@ -272,6 +277,8 @@ def fur_send_command(device, command):
     ser = serial_connections[device]
     comm  = bytearray(command, 'ascii')
     ser.write(comm)
+
+    ser.close()
 
     return
 
