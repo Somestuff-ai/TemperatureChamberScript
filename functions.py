@@ -99,7 +99,7 @@ def end_point_20rdgs(temperature):
         writer.writerow([])
         writer.writerow(["End Point Readings:"])
 
-    for i in range (19):    
+    for i in range (20):    
         ISOTECH_T = float(tt10_send_enquiry())
         sum_ISOTECH = sum_ISOTECH + ISOTECH_T
         
