@@ -102,17 +102,18 @@ def end_point_20rdgs(temperature):
     for i in range (20):    
         ISOTECH_T = float(tt10_send_enquiry())
         sum_ISOTECH = sum_ISOTECH + ISOTECH_T
+        print (sum_ISOTECH)
         
         WS504_T = float(fur_send_enquiry(7, 'Temp', '01L002'))
         sum_WS504_T = sum_WS504_T + WS504_T
-
+        print (sum_WS504_T)
 
         EUT_mA = float(fur_send_enquiry(7, 'mA','01L002'))
         sum_EUT_mA = sum_EUT_mA + EUT_mA
-
+        print (sum_EUT_mA)
 
         Oven_T = fur_send_enquiry(1,'Temp','01M200' )
-    
+        print (Oven_T)
 
         current_time = datetime.now()
         elapsed_time = current_time - start_time
@@ -124,9 +125,16 @@ def end_point_20rdgs(temperature):
      
 
     avg_ISOTECH_T = round(sum_ISOTECH/20, 3)
+    print (avg_ISOTECH_T)
+
     avg_WS504_T = round(sum_WS504_T/20, 3)
+    print (WS504_T)
+
     avg_EUT_mA = round(sum_EUT_mA/20, 3)
+    print (EUT_mA)
+
     diff = round(abs( avg_ISOTECH_T - avg_WS504_T), 3)
+    print(diff)
 
     sum_ISOTECH = 0
     sum_WS504_T = 0
