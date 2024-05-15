@@ -230,6 +230,8 @@ def fur_send_enquiry(device, reading, enquiry):
     global response
     enquiry = enquiry_check_sum(enquiry)
     ser = serial_connections[device]
+    if not ser.is_open:
+        ser.open()
     enq = bytearray(enquiry, 'ascii')
     ser.write(enq)
     res = ''
@@ -259,6 +261,9 @@ def fur_send_enquiry(device, reading, enquiry):
 def tt10_send_enquiry():
     ser = serial_connections[device]
     enq = b'\x5c\xfc'
+    if not ser.is_open:
+        ser.open()
+
     ser.write(enq)
 
     time.sleep(1)
@@ -275,6 +280,9 @@ def tt10_send_enquiry():
 def fur_send_command(device, command):
     command = command_check_sum(command)
     ser = serial_connections[device]
+    if not ser.is_open:
+        ser.open()
+
     comm  = bytearray(command, 'ascii')
     ser.write(comm)
 
