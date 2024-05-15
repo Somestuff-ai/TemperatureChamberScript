@@ -162,21 +162,23 @@ def EnumWindowCallback(hwnd, lParam):
 
 # Simulate clicking on "Take Measurements" button
 def take_measurement(hwnd_cal_sheet, hwnd_take_meas):
+    
+    win32gui.SetForegroundWindow(hwnd_cal_sheet)    
     rect = win32gui.GetWindowRect(hwnd_take_meas)
     center_x = (rect[0] + rect[2]) // 2
     center_y = (rect[1] + rect[3]) // 2
     
     # Move the mouse cursor to the center of the button
-    pyautogui.moveTo(center_x, center_y)
+    # pyautogui.moveTo(center_x, center_y)
     
-    # Mouse down
-    pyautogui.mouseDown(button='left')
-    time.sleep(1)  # 1-second delay
+    # # Mouse down
+    # pyautogui.mouseDown(button='left')
+    # time.sleep(1)  # 1-second delay
     
-    # Mouse up
-    pyautogui.mouseUp(button='left')
+    # # Mouse up
+    # pyautogui.mouseUp(button='left')
 
-    # pyautogui.click(center_x, center_y)
+    pyautogui.click(center_x, center_y)
 
 # Main function to take CS043 reading
 def take_cs043_reading():

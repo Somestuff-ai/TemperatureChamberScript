@@ -17,6 +17,7 @@ def EnumWindowCallback(hwnd, lParam):
 
 # Simulate clicking on "Take Measurements" button
 def take_measurement(hwnd_cal_sheet, hwnd_take_meas):
+    win32gui.SetForegroundWindow(hwnd_cal_sheet)
     rect = win32gui.GetWindowRect(hwnd_take_meas)
     center_x = (rect[0] + rect[2]) // 2
     center_y = (rect[1] + rect[3]) // 2
