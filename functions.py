@@ -36,6 +36,8 @@ start_time = datetime.now()
 def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
     global start_time
 
+    generate_csv_headers()
+
     fur_send_command(1, f'01v000a{temperature}')
 
     #set_temp(temperature)  # Temperature: 10, Elapsed time: 10 seconds, Log delay: 10 seconds
@@ -298,6 +300,11 @@ def fur_send_command(device, command):
 
     return
 
+def generate_csv_headers():
+    headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA", "Oven T"]
+    with open(csv_file_path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(headers)
 
    
 

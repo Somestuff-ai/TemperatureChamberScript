@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from functions import run_temperature_test
 
 def main():
-    #step = 1
     run_temperature_test(10, "00:00:00", 1)
     run_temperature_test(20, "00:00:00", 1)
     run_temperature_test(30, "00:00:00", 1)
