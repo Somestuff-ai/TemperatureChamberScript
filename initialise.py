@@ -1,13 +1,10 @@
 #Initialise comports and assigns them device numbers 
 
-import csv
+
 import serial
 
 csv_file_path = "data.csv"
-headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA", "Oven T"]
-with open(csv_file_path, mode='a', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow(headers)
+
 
 
 # Define serial port parameters for each device
