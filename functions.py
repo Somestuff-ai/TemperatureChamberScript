@@ -192,7 +192,7 @@ def end_point_20rdgs(temperature):
         with open(csv_file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([])
-            writer.writerow(["Average RS80", "Average EUTmA", "Check Difference", "Pass/Fail"])
+            writer.writerow(["Average RS80 Temp", "Aveage WS504 Temp", "Average EUTmA", "Check Difference", "Pass/Fail"])
             writer.writerow([avg_ISOTECH_1, avg_WS504_1, avg_EUT_mA_1, diff_1, condition_1])
             writer.writerow([avg_ISOTECH_2, avg_WS504_2, avg_EUT_mA_2, diff_2, condition_2])
             writer.writerow([avg_ISOTECH_3, avg_WS504_3, avg_EUT_mA_3, diff_3, condition_3])
@@ -304,6 +304,7 @@ def generate_csv_headers():
     headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA", "Oven T"]
     with open(csv_file_path, mode='a', newline='') as file:
         writer = csv.writer(file)
+        writer.writerow([])
         writer.writerow(headers)
 
    
