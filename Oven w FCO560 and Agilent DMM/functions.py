@@ -35,6 +35,7 @@ start_time = datetime.now()
 
 def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
     global start_time
+    global step
 
     generate_csv_headers()
 
@@ -45,6 +46,7 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
     elapsed_time_check_seconds = time_to_seconds(elapsed_time_check)
     while True:
 
+        
         # Oven_T = fur_send_command(1,'Temp','\x0401M200\x05{' )
         Oven_T = fur_send_enquiry(1,'Temp','01M200' )
         print (Oven_T)
@@ -285,6 +287,74 @@ def tt10_send_enquiry():
     ser.close()
 
     return response
+
+def venus_send_command():
+
+    if step == 1:
+        ser = serial_connections[2]
+        command = b'\x01\x10\x80\x04\x00\x02\x04\x00\x00\x00\x00\x93\x9A'# Command for 0°C set point
+        if not ser.is_open:
+            ser.open()
+
+        ser.write(command)
+
+
+        ser.close()        
+
+    elif step == 2:
+        ser = serial_connections[2]
+        command = b'\x01\x10\x80\x04\x00\x02\x04\x41\x20\x00\x00\x86\x6C' # Command for 10°C set point
+        if not ser.is_open:
+            ser.open()
+
+        ser.write(command)
+
+
+        ser.close()
+
+    elif step == 3:
+        ser = serial_connections[2]
+        command = b'\x01\x10\x80\x04\x00\x02\x04\x41\xA0\x00\x00\x87\x84' #Command for 20°C set point
+        if not ser.is_open:
+            ser.open()
+
+        ser.write(command)
+
+
+        ser.close()
+
+    elif step == 4:
+        ser = serial_connections[2]
+        command = b'\x01\x10\x80\x04\x00\x02\x04\x42\x0C\x00\x00\x47\xE1' #Command for 35°C set point
+        if not ser.is_open:
+            ser.open()
+
+        ser.write(command)
+
+
+        ser.close()    
+
+    elif step == 5:
+        ser = serial_connections[2]
+        command = b'\x01\x10\x80\x04\x00\x02\x04\x42\x48\x00\x00\x07\xF4' #Command for 50°C set point
+        if not ser.is_open:
+            ser.open()
+
+        ser.write(command)
+
+
+        ser.close()  
+
+    elif step == 6:
+        ser = serial_connections[2]
+        command = b'\x01\x10\x80\x04\x00\x02\x04\x41\xA0\x00\x00\x87\x84' #Command for 50°C set point
+        if not ser.is_open:
+            ser.open()
+
+        ser.write(command)
+
+
+        ser.close()  
  
 # Functions to send commands
 def fur_send_command(device, command):
