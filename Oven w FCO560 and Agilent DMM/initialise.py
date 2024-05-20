@@ -10,6 +10,7 @@ csv_file_path = "data.csv"
 # Define serial port parameters for each device
 SERIAL_PORTS = {
     1: {'port': 'COM3', 'baudrate': 9600},
+    2: {'port': 'COM4', 'baudrate': 9600},
     7: {'port': 'COM11', 'baudrate': 9600},
     14: {'port': 'COM14', 'baudrate': 2400}
 }
