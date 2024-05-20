@@ -4,7 +4,7 @@
 # from tkinter import simpledialog
 from functions import run_temperature_test
 from datetime import datetime, timedelta
-from functions import run_temperature_test
+
 
 # def get_user_inputs():
 #     root = tk.Tk()
