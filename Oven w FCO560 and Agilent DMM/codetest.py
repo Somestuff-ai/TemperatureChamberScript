@@ -13,7 +13,7 @@ from initialise import csv_file_path, serial_connections, device
 # print(hex_bytes.hex())
 
 
-step = 3
+step = 5
 def venus_send_command():
 
     if step == 1:
@@ -62,7 +62,7 @@ def venus_send_command():
 
     elif step == 5:
         ser = serial_connections[2]
-        command = b'\x01\x10\x80\x04\x00\x02\x04\x42\x32\x00\x00\x46\xC4' #Command for 50°C set point
+        command = b'\x01\x10\x80\x04\x00\x02\x04\x42\x48\x00\x00\x07\xF4' #Command for 50°C set point
         if not ser.is_open:
             ser.open()
 
