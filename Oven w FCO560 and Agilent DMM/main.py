@@ -2,9 +2,9 @@
 
 # import tkinter as tk
 # from tkinter import simpledialog
-from functions import run_temperature_test
+from functions import run_temperature_test, output_avgs
 from datetime import datetime, timedelta
-from functions import run_temperature_test
+
 
 # def get_user_inputs():
 #     root = tk.Tk()
@@ -21,12 +21,13 @@ from functions import run_temperature_test
 
 
 def main():
-    run_temperature_test(0, "00:02:00", 1)
-    run_temperature_test(10, "00:04:00", 1)
-    run_temperature_test(20, "00:06:00", 1)
-    run_temperature_test(35, "00:08:00", 1)
-    run_temperature_test(50, "00:08:00", 1)
-    run_temperature_test(20, "00:08:00", 1)    
+    run_temperature_test(0, "00:00:10", 1)
+    run_temperature_test(10, "00:00:20", 1)
+    run_temperature_test(20, "00:00:30", 1)
+    run_temperature_test(35, "00:00:40", 1)
+    run_temperature_test(50, "00:00:50", 1)
+    run_temperature_test(20, "00:01:00", 1)
+    output_avgs()
 
 if __name__ == "__main__":
     main()

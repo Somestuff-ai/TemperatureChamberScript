@@ -88,11 +88,11 @@ def time_to_seconds(time_str):
 
 def end_point_20rdgs(temperature):
     global step
-    global avg_EUT_mA_1, avg_EUT_mA_2, avg_EUT_mA_3, avg_EUT_mA_4
-    global avg_ISOTECH_1, avg_ISOTECH_2, avg_ISOTECH_3, avg_ISOTECH_4
-    global avg_WS504_1, avg_WS504_2, avg_WS504_3, avg_WS504_4
-    global diff_1, diff_2, diff_3, diff_4
-    global condition_1, condition_2, condition_3, condition_4
+    global avg_EUT_mA_1, avg_EUT_mA_2, avg_EUT_mA_3, avg_EUT_mA_4, avg_EUT_mA_5, avg_EUT_mA_6, avg_EUT_mA_7
+    global avg_ISOTECH_1, avg_ISOTECH_2, avg_ISOTECH_3, avg_ISOTECH_4, avg_ISOTECH_5, avg_ISOTECH_6, avg_ISOTECH_7
+    global avg_WS504_1, avg_WS504_2, avg_WS504_3, avg_WS504_4, avg_WS504_5, avg_WS504_6, avg_WS504_7
+    global diff_1, diff_2, diff_3, diff_4, diff_5, diff_6, diff_7
+    global condition_1, condition_2, condition_3, condition_4, condition_5, condition_6, condition_7
 
     sum_ISOTECH = 0
     sum_WS504_T = 0
@@ -190,17 +190,56 @@ def end_point_20rdgs(temperature):
             condition_4 = "Fail"
         else:
             condition_4 = "Pass"
+        step += 1
+        return avg_ISOTECH_4, avg_WS504_4, avg_EUT_mA_4, diff_4, condition_4, step
 
-        with open(csv_file_path, mode='a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([])
-            writer.writerow(["Average RS80 Temp", "Aveage WS504 Temp", "Average EUTmA", "Check Difference", "Pass/Fail"])
-            writer.writerow([avg_ISOTECH_1, avg_WS504_1, avg_EUT_mA_1, diff_1, condition_1])
-            writer.writerow([avg_ISOTECH_2, avg_WS504_2, avg_EUT_mA_2, diff_2, condition_2])
-            writer.writerow([avg_ISOTECH_3, avg_WS504_3, avg_EUT_mA_3, diff_3, condition_3])
-            writer.writerow([avg_ISOTECH_4, avg_WS504_4, avg_EUT_mA_4, diff_4, condition_4]) 
+    elif step == 5:
+        avg_ISOTECH_5 = avg_ISOTECH_T
+        avg_WS504_5 = avg_WS504_T
+        avg_EUT_mA_5 = avg_EUT_mA
+        diff_5 = diff
+        if diff_5 > 0.1:
+            condition_5 = "Fail"
+        else:
+            condition_5 = "Pass"
+        step += 1
+        return avg_ISOTECH_5, avg_WS504_5, avg_EUT_mA_5, diff_5, condition_5, step    
 
-    return    
+    elif step == 6:
+        avg_ISOTECH_6 = avg_ISOTECH_T
+        avg_WS504_6 = avg_WS504_T
+        avg_EUT_mA_6 = avg_EUT_mA
+        diff_6 = diff
+        if diff_6 > 0.1:
+            condition_6 = "Fail"
+        else:
+            condition_6 = "Pass"
+        step += 1
+        return avg_ISOTECH_6, avg_WS504_6, avg_EUT_mA_6, diff_6, condition_6, step   
+
+    elif step == 7:
+        avg_ISOTECH_7 = avg_ISOTECH_T
+        avg_WS504_7 = avg_WS504_T
+        avg_EUT_mA_7 = avg_EUT_mA
+        diff_7 = diff
+        if diff_7 > 0.1:
+            condition_7 = "Fail"
+        else:
+            condition_7 = "Pass"
+        step += 1
+        return avg_ISOTECH_7, avg_WS504_7, avg_EUT_mA_7, diff_7, condition_7, step   
+
+    # else:
+    #     with open(csv_file_path, mode='a', newline='') as file:
+    #         writer = csv.writer(file)
+    #         writer.writerow([])
+    #         writer.writerow(["Average RS80 Temp", "Aveage WS504 Temp", "Average EUTmA", "Check Difference", "Pass/Fail"])
+    #         writer.writerow([avg_ISOTECH_1, avg_WS504_1, avg_EUT_mA_1, diff_1, condition_1])
+    #         writer.writerow([avg_ISOTECH_2, avg_WS504_2, avg_EUT_mA_2, diff_2, condition_2])
+    #         writer.writerow([avg_ISOTECH_3, avg_WS504_3, avg_EUT_mA_3, diff_3, condition_3])
+    #         writer.writerow([avg_ISOTECH_4, avg_WS504_4, avg_EUT_mA_4, diff_4, condition_4]) 
+
+    # return    
 
 
 
@@ -271,7 +310,7 @@ def fur_send_enquiry(device, reading, enquiry):
     return response
 
 def tt10_send_enquiry():
-    ser = serial_connections[device]
+    ser = serial_connections[14] 
     enq = b'\x5c\xfc'
     if not ser.is_open:
         ser.open()
@@ -366,6 +405,18 @@ def generate_csv_headers():
         writer.writerow([])
         writer.writerow(headers)
 
+def output_avgs():
+    with open(csv_file_path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([])
+        writer.writerow(["Average RS80 Temp", "Aveage WS504 Temp", "Average EUTmA", "Check Difference", "Pass/Fail"])
+        writer.writerow([avg_ISOTECH_1, avg_WS504_1, avg_EUT_mA_1, diff_1, condition_1])
+        writer.writerow([avg_ISOTECH_2, avg_WS504_2, avg_EUT_mA_2, diff_2, condition_2])
+        writer.writerow([avg_ISOTECH_3, avg_WS504_3, avg_EUT_mA_3, diff_3, condition_3])
+        writer.writerow([avg_ISOTECH_4, avg_WS504_4, avg_EUT_mA_4, diff_4, condition_4])
+        writer.writerow([avg_ISOTECH_5, avg_WS504_5, avg_EUT_mA_5, diff_5, condition_5])
+        writer.writerow([avg_ISOTECH_6, avg_WS504_6, avg_EUT_mA_6, diff_6, condition_6])
+        writer.writerow([avg_ISOTECH_7, avg_WS504_7, avg_EUT_mA_7, diff_7, condition_7])
    
 
     
