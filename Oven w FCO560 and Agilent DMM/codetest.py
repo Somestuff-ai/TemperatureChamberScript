@@ -106,3 +106,21 @@ def agilent_send_enquiry():
     response = ser.read(1000)
 
     ser.close()
+
+
+
+
+
+
+    # def get_user_inputs():
+#     root = tk.Tk()
+#     root.withdraw()  # Hide the main window
+
+#     inputs = []
+#     for i in range(1,4):
+#         temperature = simpledialog.askinteger("Input", f"Enter temperature for measurement {i}:")
+#         time_elapsed = simpledialog.askstring("Input", f"Enter time elapsed for measurement {i} (HH:MM:SS format):")
+#         sleep_time = simpledialog.askinteger("Input", f"Enter sleep time for measurement {i} (in seconds):")
+#         inputs.append((temperature, time_elapsed, sleep_time))
+
+#     return inputs
