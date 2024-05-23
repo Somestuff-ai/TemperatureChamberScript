@@ -4,11 +4,11 @@
 import serial
 import csv
 
-csv_file_path = ""
+# csv_file_path = ""
 
-def set_csv_file_path(path):
-    global csv_file_path
-    csv_file_path = path
+# def set_csv_file_path(path):
+#     global csv_file_path
+#     csv_file_path = path
 
 
 

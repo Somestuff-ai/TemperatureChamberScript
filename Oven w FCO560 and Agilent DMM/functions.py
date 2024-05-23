@@ -1,4 +1,4 @@
-from initialise import csv_file_path, serial_connections, device
+from initialise import serial_connections, device
 from CS043_Click import take_cs043_reading
 import time
 import csv
@@ -397,6 +397,13 @@ def fur_send_command(device, command):
     ser.close()
 
     return
+
+
+
+csv_file_path = ""
+def set_csv_file_path(path):
+    global csv_file_path
+    csv_file_path = path
 
 def generate_csv_headers():
     headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA", "Oven T"]

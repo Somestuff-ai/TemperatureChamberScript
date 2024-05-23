@@ -2,8 +2,8 @@
 
 import sys
 import json
-from functions import run_temperature_test, output_avgs
-from initialise import set_csv_file_path
+from functions import run_temperature_test, output_avgs, set_csv_file_path
+
 
 # def load_config(config.json):
 #     with open(config.json, 'r') as file:
