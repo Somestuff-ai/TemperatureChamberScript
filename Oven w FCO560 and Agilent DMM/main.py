@@ -1,34 +1,38 @@
 #main function to start temperature calibration using Oven, Oven Controller, FCO56 and WS504
 
-
+import sys
 import json
 from functions import run_temperature_test, output_avgs
+from initialise import set_csv_file_path
 
-def load_config(config.json):
-    with open(config.json, 'r') as file:
-        config = json.load(config.json)
-    return config
+# def load_config(config.json):
+#     with open(config.json, 'r') as file:
+#         config = json.load(config.json)
+#     return config
 
 
 
 
 
 def main():
-    config = load_config('config.json')
+    if len(sys.argv) != 3:
+        print("Usage: python main.py <config_file> <csv_file_path>")
+        sys.exit(1)
 
-    for test in config['tests']:
-        temperature = test[temperature]
-        time_elapsed = test[time_elapsed]
-        sleep_time = test[sleep_time]
+    config_file = sys.argv[1]
+    csv_file_path = sys.argv[2]
 
-        run_temperature_test(temperature, time_elapsed, sleep_time)
+    # Set the CSV file path
+    set_csv_file_path(csv_file_path)
 
-    # run_temperature_test(0, "00:00:10", 1)
-    # run_temperature_test(10, "00:00:20", 1)
-    # run_temperature_test(20, "00:00:30", 1)
-    # run_temperature_test(35, "00:00:40", 1)
-    # run_temperature_test(50, "00:00:50", 1)
-    # run_temperature_test(20, "00:01:00", 1)
+    # Read the config file
+    with open(config_file, 'r') as f:
+        config_data = json.load(f)
+
+    # Run temperature tests based on config data
+    for test in config_data['tests']:
+        run_temperature_test(test['temperature'], test['time_elapsed'], test['sleep_time'])
+        
     output_avgs()
 
 if __name__ == "__main__":
