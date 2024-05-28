@@ -1,223 +1,126 @@
-
-# import serial
-# import time
-# ser = serial.Serial ('COM3',9600)
-
-# enq = bytearray('\x0401M200\x05{', 'ascii') #Oven Temperature a-b
-# vals = []
-# ser.write(enq)
-# res = ''
-# response = ser.read_until(b'\x03')  # Read until <ETX> character (ASCII code 3) is encountered#
-# res += response.decode('ascii')
-# if res.endswith('\x03'):
-#     start_index = res.find('a') + 1
-#     end_index = res.find('b',start_index)
-#     substr = res[start_index:end_index]
-#     substr = float(substr)
-#     vals.append(substr)       
-#     response = vals
-#     print (response)
-#     vals = [] 
-        
-   
-
-# ser = serial.Serial ('COM11',9600)
-
-# vals = []
-
-# enq = bytearray('\x0401L002\x05z', 'ascii') #WS504 Temp Reading k-l and EUT mA reading n-o
-# vals = []
-# ser.write(enq)
-# res = ''
-# response = ser.read_until(b'\x03')  # Read until <ETX> character (ASCII code 3) is encountered#
-# res += response.decode('ascii')
-# if res.endswith('\x03'):
-#     start_index = res.find('k', res.find('j')) + 1
-#     end_index = res.find('l',start_index)
-#     substr = res[start_index:end_index]
-#     substr = float(substr)
-#     vals.append(substr)       
-#     response = vals
-#     print (response)
-#     vals = [] 
-
-
-
-# ser = serial.Serial ('COM11',9600)
-
-# enq = bytearray('\x0401L002\x05z', 'ascii') #WS504 Temp Reading k-l and EUT mA reading n-o
-# vals = []
-# ser.write(enq)
-# res = ''
-# response = ser.read_until(b'\x03')  # Read until <ETX> character (ASCII code 3) is encountered#
-# res += response.decode('ascii')
-# if res.endswith('\x03'):
-#     start_index = res.find('n', res.find('l')) + 1
-#     end_index = res.find('o', start_index)
-#     substr = res[start_index:end_index]
-#     substr = float(substr)
-#     vals.append(substr)       
-#     response = vals
-#     print (response)
-#     vals = [] 
-
-
-
-
-# # Open serial port
-# ser = serial.Serial('COM14', 2400)  
-
-# # Define the communication string
-# communication_string = b'\x5c\xfc'  # This includes the escape backslash
-
-# # Send the communication string
-# ser.write(communication_string)
-
-# # Wait for 1000 ms (1 second)
-# time.sleep(1)
-
-# # Read response
-# response = ser.read_all()
-
-# response_str = response.decode('utf-8')
-# numerical_value = response_str[2:8]
-
-
-# print("Extracted value:", numerical_value)
-
-
-# print("Response:", response)
-
-# # Close the serial port
-# ser.close()
-
-
-
-
-# ser = serial.Serial ('COM14',2400, timeout= 1)
-
-# enq = b'\\xfc ' 
-# res = b''
-# ser.write(enq)  # Assuming this is the equivalent of '\ü ' in Python
-# print (enq)
-
-# while True:
-#     byte = ser.read()
-#     if byte:
-#         res += byte
-#     else:
-#         break
-
-
-# ser = serial.Serial ('COM14',9600, timeout = 1)
-
-# enq = b'\x5C\xFC' 
-# res = b''
-
-
-# while True:
-#     ser.write(enq)  # Assuming this is the equivalent of '\ü ' in Python
-    
-#     while True:
-#         byte = ser.read(1)
-#         if byte:
-#             res += byte
-#             if len(res) >= 8:
-#                 break
-#             else:
-#                 break
-        
-#     isotech = res[2:8]  # Extracting from the 3rd character to the next 6 characters
-#     print(isotech)
-
-
-# import pyautogui
-
-# # Find the location of the button on the screen
-# button_location = pyautogui.locateOnScreen('button_image.png')
-
-# # If button not found, print an error message
-# if button_location is None:
-#     print("Button not found.")
-# else:
-#     # Click the button
-#     pyautogui.click(button_location)
-
+import serial
+from datetime import datetime, timedelta
 import time
-import ctypes
-import win32gui
-import win32api
-import win32con
-import pyautogui
+from initialise import csv_file_path, serial_connections, device
 
-# Callback function for window enumeration
-def EnumWindowCallback(hwnd, lParam):
-    global HWND_CalSheet
-    text = win32gui.GetWindowText(hwnd)
-    if "Calibration entry sheet" in text:
-        HWND_CalSheet = hwnd
+# char = "\ü"
+# hex_representation = char.encode("utf-8").hex()
+# print(hex_representation)
 
-        return False
-    return True
+# serial_command = "^A^P€^D^@^B^D^@^@^@^@“š"
+# hex_bytes = bytes(serial_command.encode('utf-8'))
 
-# Simulate clicking on "Take Measurements" button
-def take_measurement(hwnd_cal_sheet, hwnd_take_meas):
-    
-    win32gui.SetForegroundWindow(hwnd_cal_sheet)    
-    rect = win32gui.GetWindowRect(hwnd_take_meas)
-    center_x = (rect[0] + rect[2]) // 2
-    center_y = (rect[1] + rect[3]) // 2
-    
-    # Move the mouse cursor to the center of the button
-    # pyautogui.moveTo(center_x, center_y)
-    
-    # # Mouse down
-    # pyautogui.mouseDown(button='left')
-    # time.sleep(1)  # 1-second delay
-    
-    # # Mouse up
-    # pyautogui.mouseUp(button='left')
-
-    pyautogui.click(center_x, center_y)
-
-# Main function to take CS043 reading
-def take_cs043_reading():
-    global HWND_CalSheet
-    HWND_CalSheet = 0
-    try:
-        win32gui.EnumWindows(EnumWindowCallback, 0)
-    except:
-        if HWND_CalSheet != 0:
-            hwnd_take_meas = win32gui.FindWindowEx(HWND_CalSheet, 0, None, "Take Measurement")
-            if hwnd_take_meas != 0:
-                take_measurement(HWND_CalSheet, hwnd_take_meas)
-                time.sleep(0.4)
-                text = ""
-                text_buffer = ctypes.create_unicode_buffer(256)  # Create a buffer to hold the text
-                while not text_buffer.value.startswith("Take"):
-                    time.sleep(0.2)
-                    win32gui.SendMessage(hwnd_take_meas, win32con.WM_GETTEXT, 256, text_buffer)  # Use the buffer to receive the text
-                    text = text_buffer.value  # Update the value of text
-                return
-                # while not text.startswith("Take"):
-                #     time.sleep(0.2)
-                #     win32gui.SendMessage(hwnd_take_meas, win32con.WM_GETTEXT, 18, text)
-#             # Button is enabled again, measurement process completed
-
-# # Entry point
-if __name__ == "__main__":
-    take_cs043_reading()
-
-# data = 'aa10.56b21.48c20.62d20.76e21.92f10.0g25265h26172i26063j25993k1l0m0n0o-42.7p-44.2q-44.2\x03'
-
-# # Find the index of 'b'
+# print(hex_bytes.hex())
 
 
-# # Find the index of 'a' before 'b'
-# a_index = data.rfind('a') + 1
-# b_index = data.find('b', a_index)
-# # Extract the value between 'a' and 'b'
-# # start_index = data.rfind('a') + 1
-# # end_index = res.find('b',start_index)  
-# value = float(data[a_index:b_index])
-# print(value)
+step = 5
+def venus_send_command():
+
+    if step == 1:
+        ser = serial_connections[2]
+        command = b'\x01\x10\x80\x04\x00\x02\x04\x00\x00\x00\x00\x93\x9A'# Command for 0°C set point
+        if not ser.is_open:
+            ser.open()
+
+        ser.write(command)
+
+
+        ser.close()        
+
+    elif step == 2:
+        ser = serial_connections[2]
+        command = b'\x01\x10\x80\x04\x00\x02\x04\x41\x20\x00\x00\x86\x6C' # Command for 10°C set point
+        if not ser.is_open:
+            ser.open()
+
+        ser.write(command)
+
+
+        ser.close()
+
+    elif step == 3:
+        ser = serial_connections[2]
+        command = b'\x01\x10\x80\x04\x00\x02\x04\x41\xA0\x00\x00\x87\x84' #Command for 20°C set point
+        if not ser.is_open:
+            ser.open()
+
+        ser.write(command)
+
+
+        ser.close()
+
+    elif step == 4:
+        ser = serial_connections[2]
+        command = b'\x01\x10\x80\x04\x00\x02\x04\x42\x0C\x00\x00\x47\xE1' #Command for 35°C set point
+        if not ser.is_open:
+            ser.open()
+
+        ser.write(command)
+
+
+        ser.close()    
+
+    elif step == 5:
+        ser = serial_connections[2]
+        command = b'\x01\x10\x80\x04\x00\x02\x04\x42\x48\x00\x00\x07\xF4' #Command for 50°C set point
+        if not ser.is_open:
+            ser.open()
+
+        ser.write(command)
+
+
+        ser.close()  
+
+    elif step == 6:
+        ser = serial_connections[2]
+        command = b'\x01\x10\x80\x04\x00\x02\x04\x41\xA0\x00\x00\x87\x84' #Command for 50°C set point
+        if not ser.is_open:
+            ser.open()
+
+        ser.write(command)
+
+
+        ser.close()        
+
+
+venus_send_command()
+
+
+
+def agilent_send_enquiry():
+
+    ser = serial_connections[device]
+
+    commands = [
+    b'SYST:REMOTE\r\n',
+    b'*CLS\r\n',
+    b'func "FRES"\r\n',
+    b'conf:FRES DEF,DEF\r\n',
+    b'READ?\r\n'
+] 
+    for command in commands:
+        ser.write(command)  
+
+    time.sleep(1)  
+
+    response = ser.read(1000)
+
+    ser.close()
+
+
+
+
+
+
+    # def get_user_inputs():
+#     root = tk.Tk()
+#     root.withdraw()  # Hide the main window
+
+#     inputs = []
+#     for i in range(1,4):
+#         temperature = simpledialog.askinteger("Input", f"Enter temperature for measurement {i}:")
+#         time_elapsed = simpledialog.askstring("Input", f"Enter time elapsed for measurement {i} (HH:MM:SS format):")
+#         sleep_time = simpledialog.askinteger("Input", f"Enter sleep time for measurement {i} (in seconds):")
+#         inputs.append((temperature, time_elapsed, sleep_time))
+
+#     return inputs
