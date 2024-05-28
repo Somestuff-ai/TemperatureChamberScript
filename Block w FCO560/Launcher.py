@@ -36,14 +36,15 @@ def run_script():
     setup_selected = setup_var.get()
     config_selected = config_var.get()
 
-    if setup_selected == "setup_560":
+    if setup_selected == "setup_Block_560":
         # Find the script in the Temperature Chamber Script folder
         script_path = glob.glob(os.path.join(base_dir.get(), "**", "Block w FCO560", "main.py"), recursive=True)
         if script_path:
             script_path = script_path[0]  # Take the first match if there are multiple
-    else:
-        # Default script for other setups and config files
-        script_path = "main.py"
+    elif setup_selected == "setup_Oven_560":
+        script_path = glob.glob(os.path.join(base_dir.get(), "**", "Oven w FCO560", "main.py"), recursive=True)
+        if script_path:
+            script_path = script_path[0]  # Take the first match if there are multiple        
 
     command = ["python", script_path, config_selected, csv_file_path.get()]
     subprocess.run(command)
@@ -52,7 +53,7 @@ def run_script():
 
 # Function to handle setup selection
 def select_setup():
-    if setup_var.get() in ["setup_0_50", "setup_560"]:
+    if setup_var.get() in ["setup_Block_560", "setup_Oven_560"]:
         config_label.pack(pady=10)
         config_frame.pack(pady=10)
     check_conditions()
@@ -109,12 +110,12 @@ setup_frame.pack(pady=10)
 setup_label = ctk.CTkLabel(setup_frame, text="Select setup:")
 setup_label.pack(pady=5)
 
-setup_0_50_rb = ctk.CTkRadioButton(setup_frame, text="setup 0-50", variable=setup_var, value="setup_0_50", command=select_setup)
-setup_0_50_rb.pack(pady=5)
+setup_Block_560_rb = ctk.CTkRadioButton(setup_frame, text="Block w FCO560 (0-50°C)", variable=setup_var, value="setup_Block_560", command=select_setup)
+setup_Block_560_rb.pack(pady=5)
 
 # Create setup 560 radio button
-setup_560_rb = ctk.CTkRadioButton(setup_frame, text="setup 560", variable=setup_var, value="setup_560", command=select_setup)
-setup_560_rb.pack(pady=5)
+setup_Oven_560_rb = ctk.CTkRadioButton(setup_frame, text="Oven w FCO560 (10-30°C)", variable=setup_var, value="setup_Oven_560", command=select_setup)
+setup_Oven_560_rb.pack(pady=5)
 
 # Create Config File Selection radio buttons
 config_frame = ctk.CTkFrame(app)

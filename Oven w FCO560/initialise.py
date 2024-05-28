@@ -3,7 +3,7 @@
 
 import serial
 
-csv_file_path = "data.csv"
+
 
 
 

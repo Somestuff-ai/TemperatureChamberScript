@@ -1,30 +1,39 @@
 #main function to start temperature calibration using Oven, Oven Controller, FCO56 and WS504
 
-# import tkinter as tk
-# from tkinter import simpledialog
-from functions import run_temperature_test
-from datetime import datetime, timedelta
+import sys
+import json
+from functions import run_temperature_test, output_avgs, set_csv_file_path
 
 
-# def get_user_inputs():
-#     root = tk.Tk()
-#     root.withdraw()  # Hide the main window
 
-#     inputs = []
-#     for i in range(1,4):
-#         temperature = simpledialog.askinteger("Input", f"Enter temperature for measurement {i}:")
-#         time_elapsed = simpledialog.askstring("Input", f"Enter time elapsed for measurement {i} (HH:MM:SS format):")
-#         sleep_time = simpledialog.askinteger("Input", f"Enter sleep time for measurement {i} (in seconds):")
-#         inputs.append((temperature, time_elapsed, sleep_time))
 
-#     return inputs
 
+# def main():
+#     run_temperature_test(10, "00:02:00", 1)
+#     run_temperature_test(20, "00:04:00", 1)
+#     run_temperature_test(30, "00:06:00", 1)
+#     run_temperature_test(20, "00:08:00", 1)
 
 def main():
-    run_temperature_test(10, "00:02:00", 1)
-    run_temperature_test(20, "00:04:00", 1)
-    run_temperature_test(30, "00:06:00", 1)
-    run_temperature_test(20, "00:08:00", 1)
+    if len(sys.argv) != 3:
+        print("Usage: python main.py <config_file> <csv_file_path>")
+        sys.exit(1)
+
+    config_file = sys.argv[1]
+    csv_file_path = sys.argv[2]
+
+    # Set the CSV file path
+    set_csv_file_path(csv_file_path)
+
+    # Read the config file
+    with open(config_file, 'r') as f:
+        config_data = json.load(f)
+
+    # Run temperature tests based on config data
+    for test in config_data['tests']:
+        run_temperature_test(test['temperature'], test['time_elapsed'], test['sleep_time'])
+        
+    output_avgs()
 
 if __name__ == "__main__":
     main()

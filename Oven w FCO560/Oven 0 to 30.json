@@ -1,33 +1,23 @@
 {
     "tests": [
         {
-            "temperature": 0,
+            "temperature": 10,
             "time_elapsed": "00:00:10",
             "sleep_time": 1
         },
         {
-            "temperature": 10,
+            "temperature": 20,
             "time_elapsed": "00:00:20",
             "sleep_time": 1
         },
         {
-            "temperature": 20,
+            "temperature": 30,
             "time_elapsed": "00:00:30",
             "sleep_time": 1
         },
         {
-            "temperature": 35,
-            "time_elapsed": "00:00:40",
-            "sleep_time": 1
-        },
-        {
-            "temperature": 50,
-            "time_elapsed": "00:00:50",
-            "sleep_time": 1
-        },
-        {
             "temperature": 20,
-            "time_elapsed": "00:01:00",
+            "time_elapsed": "00:00:40",
             "sleep_time": 1
         }
     ]

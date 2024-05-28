@@ -1,9 +1,10 @@
-from initialise import csv_file_path, serial_connections, device
+from initialise import serial_connections, device
 from CS043_Click import take_cs043_reading
 import time
 import csv
 from datetime import datetime, timedelta
 
+csv_file_path = ""
 step = 1
 avg_ISOTECH_1 = 0
 avg_ISOTECH_2 = 0
@@ -188,17 +189,8 @@ def end_point_20rdgs(temperature):
             condition_4 = "Fail"
         else:
             condition_4 = "Pass"
-
-        with open(csv_file_path, mode='a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([])
-            writer.writerow(["Average RS80 Temp", "Aveage WS504 Temp", "Average EUTmA", "Check Difference", "Pass/Fail"])
-            writer.writerow([avg_ISOTECH_1, avg_WS504_1, avg_EUT_mA_1, diff_1, condition_1])
-            writer.writerow([avg_ISOTECH_2, avg_WS504_2, avg_EUT_mA_2, diff_2, condition_2])
-            writer.writerow([avg_ISOTECH_3, avg_WS504_3, avg_EUT_mA_3, diff_3, condition_3])
-            writer.writerow([avg_ISOTECH_4, avg_WS504_4, avg_EUT_mA_4, diff_4, condition_4]) 
-
-    return    
+        step += 1
+        return avg_ISOTECH_4, avg_WS504_4, avg_EUT_mA_4, diff_4, condition_4, step
 
 
 
@@ -300,6 +292,10 @@ def fur_send_command(device, command):
 
     return
 
+def set_csv_file_path(path):
+    global csv_file_path
+    csv_file_path = path
+
 def generate_csv_headers():
     headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA", "Oven T"]
     with open(csv_file_path, mode='a', newline='') as file:
@@ -307,8 +303,18 @@ def generate_csv_headers():
         writer.writerow([])
         writer.writerow(headers)
 
-   
-
+def output_avgs():   
+    with open(csv_file_path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([])
+        writer.writerow(["Average RS80 Temp", "Aveage WS504 Temp", "Average EUTmA", "Check Difference", "Pass/Fail"])
+        writer.writerow([avg_ISOTECH_1, avg_WS504_1, avg_EUT_mA_1, diff_1, condition_1])
+        writer.writerow([avg_ISOTECH_2, avg_WS504_2, avg_EUT_mA_2, diff_2, condition_2])
+        writer.writerow([avg_ISOTECH_3, avg_WS504_3, avg_EUT_mA_3, diff_3, condition_3])
+        writer.writerow([avg_ISOTECH_4, avg_WS504_4, avg_EUT_mA_4, diff_4, condition_4])
+        writer.writerow([avg_ISOTECH_5, avg_WS504_5, avg_EUT_mA_5, diff_5, condition_5])
+        writer.writerow([avg_ISOTECH_6, avg_WS504_6, avg_EUT_mA_6, diff_6, condition_6])
+        writer.writerow([avg_ISOTECH_7, avg_WS504_7, avg_EUT_mA_7, diff_7, condition_7])
     
 
 
