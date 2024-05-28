@@ -47,9 +47,7 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
     while True:
 
         
-        # Oven_T = fur_send_command(1,'Temp','\x0401M200\x05{' )
-        Oven_T = fur_send_enquiry(1,'Temp','01M200' )
-        print (Oven_T)
+
 
         # WS504_T = fur_send_enquiry(7, 'Temp', '\x0401L002\x05z')
         WS504_T = fur_send_enquiry(7, 'Temp', '01L002')
@@ -68,7 +66,7 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
 
         with open(csv_file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA, Oven_T])
+            writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA])
         
         if elapsed_time >= timedelta(seconds=elapsed_time_check_seconds):
             break
@@ -116,8 +114,6 @@ def end_point_20rdgs(temperature):
         sum_EUT_mA = sum_EUT_mA + EUT_mA
         print (sum_EUT_mA)
 
-        Oven_T = fur_send_enquiry(1,'Temp','01M200' )
-        print (Oven_T)
 
         current_time = datetime.now()
         elapsed_time = current_time - start_time
@@ -125,7 +121,7 @@ def end_point_20rdgs(temperature):
 
         with open(csv_file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA, Oven_T])  
+            writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA])  
      
 
     avg_ISOTECH_T = round(sum_ISOTECH/20, 3)
@@ -406,7 +402,7 @@ def set_csv_file_path(path):
     csv_file_path = path
 
 def generate_csv_headers():
-    headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA", "Oven T"]
+    headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA"]
     with open(csv_file_path, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([])

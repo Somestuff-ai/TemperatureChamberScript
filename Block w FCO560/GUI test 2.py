@@ -38,7 +38,7 @@ def run_script():
 
     if setup_selected == "setup_560":
         # Find the script in the Temperature Chamber Script folder
-        script_path = glob.glob(os.path.join(base_dir.get(), "**", "Oven w FCO560 and Agilent DMM", "main.py"), recursive=True)
+        script_path = glob.glob(os.path.join(base_dir.get(), "**", "Block w FCO560", "main.py"), recursive=True)
         if script_path:
             script_path = script_path[0]  # Take the first match if there are multiple
     else:
