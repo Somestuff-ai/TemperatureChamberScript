@@ -21,6 +21,15 @@ def check_conditions():
 
 # Function to run the main script with the selected config file and csv file path
 def run_script():
+    # adding script paths 
+    
+    # setup_selected = setup_var.get()
+    # config_selected = config_var.get()
+
+    # # if setup_selected == "setup_560":
+    # #     script_path = 
+
+
     config_file = config_var.get()
     csv_path = csv_file_path.get()
     command = ["python", "main.py", config_file, csv_path]
@@ -58,7 +67,7 @@ setup_0_50_rb.pack(pady=5)
 config_frame = ctk.CTkFrame(app)
 config_label = ctk.CTkLabel(config_frame, text="Select Config File:")
 
-config_files = ["config.json"]  # Example config files
+config_files = ["Block 0 to 50.json"]  # Example config files
 for config in config_files:
     config_rb = ctk.CTkRadioButton(config_frame, text=config, variable=config_var, value=config, command=select_config)
     config_rb.pack(pady=5)
