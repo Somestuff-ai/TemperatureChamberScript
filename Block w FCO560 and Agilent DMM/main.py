@@ -5,15 +5,6 @@ import json
 from functions import run_temperature_test, output_avgs, set_csv_file_path
 
 
-# def load_config(config.json):
-#     with open(config.json, 'r') as file:
-#         config = json.load(config.json)
-#     return config
-
-
-
-
-
 def main():
     if len(sys.argv) != 3:
         print("Usage: python main.py <config_file> <csv_file_path>")
