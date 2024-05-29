@@ -51,7 +51,7 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
 
 
         # WS504_T = fur_send_enquiry(7, 'Temp', '\x0401L002\x05z')
-        WS504_T = fur_send_enquiry(7, 'Temp', '01L002')
+        WS504_T = fur_send_enquiry(3, 'Temp', '01L002')
         print(WS504_T)
 
         # EUT_mA = fur_send_enquiry(7, 'mA','\x0401L002\x05z')
@@ -390,13 +390,18 @@ def agilent_send_enquiry():
     b'conf:FRES DEF,DEF\r\n',
     b'READ?\r\n'
 ] 
+    if not ser.is_open:
+        ser.open()
+
     for command in commands:
         ser.write(command)  
+        time.sleep(0.1)
 
-    time.sleep(1)  
+      
 
-    response = ser.read(1000)
-
+    response_str = ser.read(1000)
+    response_str = response_str.decode().strip()
+    response = float(response_str)
     ser.close()
 
     return response
