@@ -46,7 +46,7 @@ def run_script():
         if script_path:
             script_path = script_path[0]  # Take the first match if there are multiple  
     elif setup_selected == "setup_Block_560_Agilent":
-        script_path = glob.glob(os.path.join(base_dir.get(), "**", "Block w FCO560 and Agilent", "main.py"), recursive=True)
+        script_path = glob.glob(os.path.join(base_dir.get(), "**", "Block w FCO560 and Agilent DMM", "main.py"), recursive=True)
         if script_path:
             script_path = script_path[0]  # Take the first match if there are multiple           
 
@@ -122,7 +122,7 @@ setup_Oven_560_rb = ctk.CTkRadioButton(setup_frame, text="Oven w FCO560", variab
 setup_Oven_560_rb.pack(pady=5)
 
 # Create Block w 560 and Agilent button
-setup_Oven_560_rb = ctk.CTkRadioButton(setup_frame, text="Block w FCO560 and Agilent", variable=setup_var, value="setup_Block_560_Agilent", command=select_setup)
+setup_Oven_560_rb = ctk.CTkRadioButton(setup_frame, text="Block w FCO560 and Agilent DMM", variable=setup_var, value="setup_Block_560_Agilent", command=select_setup)
 setup_Oven_560_rb.pack(pady=5)
 
 # Create Config File Selection radio buttons
