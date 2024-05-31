@@ -1,4 +1,4 @@
-from initialise import serial_connections, device
+from initialise import serial_connections
 from CS043_Click import take_cs043_reading
 import time
 import csv
@@ -39,26 +39,30 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
 
     generate_csv_headers()
 
-    venus_send_command(temperature)
+    try:
+        venus_send_command(temperature)
+    except Exception as e:
+        print(f"Error: Failed to send command to Venus device: {e}")
+        return
 
     
     
     elapsed_time_check_seconds = time_to_seconds(elapsed_time_check)
     while True:
 
-        
-
-
-        # WS504_T = fur_send_enquiry(7, 'Temp', '\x0401L002\x05z')
-        WS504_T = fur_send_enquiry(7, 'Temp', '01L002')
-        print(WS504_T)
+        try:
+            WS504_T = fur_send_enquiry(7, 'Temp', '01L002')
+            print(WS504_T)
 
         # EUT_mA = fur_send_enquiry(7, 'mA','\x0401L002\x05z')
-        EUT_mA = fur_send_enquiry(7, 'mA','01L002')
-        print (EUT_mA)
+            EUT_mA = fur_send_enquiry(7, 'mA','01L002')
+            print (EUT_mA)
 
-        ISOTECH_T = tt10_send_enquiry()
-        print(ISOTECH_T)
+            ISOTECH_T = tt10_send_enquiry()
+            print(ISOTECH_T)
+        except Exception as e:
+            print(f"Error: Failed to get sensor reading: {e}")
+            continue
 
         current_time = datetime.now()
         elapsed_time = current_time - start_time

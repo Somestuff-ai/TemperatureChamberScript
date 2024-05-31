@@ -3,16 +3,7 @@
 import sys
 import json
 from functions import run_temperature_test, output_avgs, set_csv_file_path
-
-
-# def load_config(config.json):
-#     with open(config.json, 'r') as file:
-#         config = json.load(config.json)
-#     return config
-
-
-
-
+from initialise import set_serial_ports
 
 def main():
     if len(sys.argv) != 3:
@@ -26,12 +17,32 @@ def main():
     set_csv_file_path(csv_file_path)
 
     # Read the config file
-    with open(config_file, 'r') as f:
-        config_data = json.load(f)
+    try:
+        with open(config_file, 'r') as f:
+            config_data = json.load(f)
+    except FileNotFoundError:
+        print(f"Error: Config file '{config_file}' not found.")
+        sys.exit(1)
+    except json.JSONDecodeError as e:
+        print(f"Error: Failed to decode JSON from '{config_file}': {e}")
+        sys.exit(1)
+
+
+    #Set the serial ports configuration
+    try:
+        set_serial_ports(config_data['serial_ports'])
+    except Exception as e:
+        print(f"Error: Failed to set serial ports: {e}")
+        sys.exit(1)
+
 
     # Run temperature tests based on config data
     for test in config_data['tests']:
-        run_temperature_test(test['temperature'], test['time_elapsed'], test['sleep_time'])
+        try:
+            run_temperature_test(test['temperature'], test['time_elapsed'], test['sleep_time'])
+        except Exception as e:
+            print(f"Error: Failed to run temperature test: {e}")
+            continue
         
     output_avgs()
 
