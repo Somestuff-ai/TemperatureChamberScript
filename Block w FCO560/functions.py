@@ -3,6 +3,7 @@ from CS043_Click import take_cs043_reading
 import time
 import csv
 from datetime import datetime, timedelta
+import customtkinter as ctk
 
 step = 1
 avg_ISOTECH_1 = 0
@@ -229,17 +230,7 @@ def end_point_20rdgs(temperature):
         step += 1
         return avg_ISOTECH_7, avg_WS504_7, avg_EUT_mA_7, diff_7, condition_7, step   
 
-    # else:
-    #     with open(csv_file_path, mode='a', newline='') as file:
-    #         writer = csv.writer(file)
-    #         writer.writerow([])
-    #         writer.writerow(["Average RS80 Temp", "Aveage WS504 Temp", "Average EUTmA", "Check Difference", "Pass/Fail"])
-    #         writer.writerow([avg_ISOTECH_1, avg_WS504_1, avg_EUT_mA_1, diff_1, condition_1])
-    #         writer.writerow([avg_ISOTECH_2, avg_WS504_2, avg_EUT_mA_2, diff_2, condition_2])
-    #         writer.writerow([avg_ISOTECH_3, avg_WS504_3, avg_EUT_mA_3, diff_3, condition_3])
-    #         writer.writerow([avg_ISOTECH_4, avg_WS504_4, avg_EUT_mA_4, diff_4, condition_4]) 
-
-    # return    
+    
 
 
 
@@ -424,11 +415,36 @@ def output_avgs():
         writer.writerow([avg_ISOTECH_5, avg_WS504_5, avg_EUT_mA_5, diff_5, condition_5])
         writer.writerow([avg_ISOTECH_6, avg_WS504_6, avg_EUT_mA_6, diff_6, condition_6])
         writer.writerow([avg_ISOTECH_7, avg_WS504_7, avg_EUT_mA_7, diff_7, condition_7])
-   
-
     
+    # Display results in a dialogue box
+    avg_dialogue = ctk.CTk()
+    avg_dialogue.title("Averages and Pass/Fail")
+    avg_dialogue.geometry("400x500")
+
+    # Add column headers
+    headers = ["Average RS80 Temp", "Aveage WS504 Temp", "Average EUTmA", "Check Difference", "Pass/Fail"]
+    header_label = ctk.CTkLabel(avg_dialogue, text=" | ".join(headers))
+    header_label.pack()
+
+    # Add rows of averages
+    avgs = [
+        [avg_ISOTECH_1, avg_WS504_1, avg_EUT_mA_1, diff_1, condition_1],
+        [avg_ISOTECH_2, avg_WS504_2, avg_EUT_mA_2, diff_2, condition_2],
+        [avg_ISOTECH_3, avg_WS504_3, avg_EUT_mA_3, diff_3, condition_3],
+        [avg_ISOTECH_4, avg_WS504_4, avg_EUT_mA_4, diff_4, condition_4],
+        [avg_ISOTECH_5, avg_WS504_5, avg_EUT_mA_5, diff_5, condition_5],
+        [avg_ISOTECH_6, avg_WS504_6, avg_EUT_mA_6, diff_6, condition_6],
+        [avg_ISOTECH_7, avg_WS504_7, avg_EUT_mA_7, diff_7, condition_7]
+    ]
+
+    for row in avgs:
+        row_label = ctk.CTkLabel(avg_dialogue, text=" | ".join(map(str, row)))
+        row_label.pack()
+
+    avg_dialogue.mainloop()
 
 
-
+def offset_calc_0_50():
+    zer0_offset = avg_EUT_mA_1 - ((avg_ISOTECH_1-0)*(avg_EUT_mA_5 - avg_EUT_mA_1)/(avg_ISOTECH_5-avg_ISOTECH_1)) 
 
 
