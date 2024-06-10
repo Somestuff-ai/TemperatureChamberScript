@@ -3,6 +3,7 @@ from CS043_Click import take_cs043_reading
 import time
 import csv
 from datetime import datetime, timedelta
+import serial
 
 csv_file_path = ""
 step = 1
@@ -56,6 +57,8 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
 
         # EUT_mA = fur_send_enquiry(7, 'mA','\x0401L002\x05z')
         EUT_Ohm = agilent_send_enquiry()
+        if response is None:
+            print ("failed to get a valid response from instrument check serial connection")
         print (EUT_Ohm)
 
         ISOTECH_T = tt10_send_enquiry()
@@ -390,21 +393,68 @@ def agilent_send_enquiry():
     b'conf:FRES DEF,DEF\r\n',
     b'READ?\r\n'
 ] 
-    if not ser.is_open:
-        ser.open()
+    try:
+        if not ser.is_open:
+            ser.open()
 
-    for command in commands:
-        ser.write(command)  
-        time.sleep(0.1)
+        for command in commands:
+            ser.write(command)
+            time.sleep(0.1)
 
-      
+        response_str = ''
+        while True:
+            time.sleep(0.1)
+            response_bytes = ser.read(1000)
+            response_str = response_bytes.decode().strip()
 
-    response_str = ser.read(1000)
-    response_str = response_str.decode().strip()
-    response = float(response_str)
-    ser.close()
+            if response_str:  # Continue only if response is not empty
+                try:
+                    response = float(response_str)
+                    break  # Break the loop if a valid numeric response is received
+                except ValueError:
+                    print(f"Error: Received a non-numeric response: {response_str}")
+                    response_str = ''  # Reset response_str to continue the loop
+
+    except serial.SerialException as e:
+        print(f"Serial communication error: {e}")
+        response = None
+
+    finally:
+        if ser.is_open:
+            ser.close()
 
     return response
+
+
+    # if not ser.is_open:
+    #     ser.open()
+
+    # for command in commands:
+    #     ser.write(command)  
+    #     time.sleep(0.1)
+
+    #     response_str = ''
+    #     while True:
+    #         time.sleep(0.1)
+    #         response_bytes = ser.read(1000)
+    #         response_str = response_bytes.decode().strip()
+
+    #         if response_str:  # Continue only if response is not empty
+    #             try:
+    #                 response = float(response_str)
+    #                 break  # Break the loop if a valid numeric response is received
+    #             except ValueError:
+    #                 print(f"Error: Received a non-numeric response: {response_str}")
+    #                 response_str = ''  # Reset response_str to continue the loop    
+
+      
+    # # time.sleep(0.1)
+    # # response_str = ser.read(1000)
+    # # response_str = response_str.decode().strip()
+    # # response = float(response_str)
+    # # ser.close()
+
+    # return response
  
 # Functions to send commands
 def fur_send_command(device, command):
