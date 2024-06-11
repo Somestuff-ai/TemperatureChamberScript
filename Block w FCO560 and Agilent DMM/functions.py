@@ -78,6 +78,7 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
         time.sleep(sleep_seconds)    
 
     take_cs043_reading()
+    print("calling 20 point readings")
     end_point_20rdgs(temperature)
     
     return
@@ -99,6 +100,8 @@ def end_point_20rdgs(temperature):
     sum_ISOTECH = 0
     sum_WS504_T = 0
     sum_EUT_Ohm = 0
+    
+    print("Starting 20 point Readings")
 
     with open(csv_file_path, mode='a', newline='') as file:
         writer = csv.writer(file)
@@ -414,6 +417,9 @@ def agilent_send_enquiry():
                 except ValueError:
                     print(f"Error: Received a non-numeric response: {response_str}")
                     response_str = ''  # Reset response_str to continue the loop
+            else:
+                print("Error: Received an empty or invalid response")
+                response_str = ''  # Reset response_str to continue the loop
 
     except serial.SerialException as e:
         print(f"Serial communication error: {e}")
