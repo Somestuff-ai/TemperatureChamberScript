@@ -2,32 +2,32 @@
     "tests": [
         {
             "temperature": 0,
-            "time_elapsed": "00:30:00",
+            "time_elapsed": "00:10:00",
             "sleep_time": 60
         },
         {
             "temperature": 10,
-            "time_elapsed": "01:00:00",
+            "time_elapsed": "00:20:00",
             "sleep_time": 60
         },
         {
             "temperature": 20,
-            "time_elapsed": "01:30:00",
+            "time_elapsed": "00:30:00",
             "sleep_time": 60
         },
         {
             "temperature": 35,
-            "time_elapsed": "02:00:00",
+            "time_elapsed": "00:40:00",
             "sleep_time": 60
         },
         {
             "temperature": 50,
-            "time_elapsed": "02:30:00",
+            "time_elapsed": "00:50:00",
             "sleep_time": 60
         },
         {
             "temperature": 20,
-            "time_elapsed": "03:00:00",
+            "time_elapsed": "01:00:00",
             "sleep_time": 60
         }
     ],

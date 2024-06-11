@@ -79,6 +79,7 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
 
     take_cs043_reading()
     print("calling 20 point readings")
+    time.sleep(1)
     end_point_20rdgs(temperature)
     
     return
@@ -404,6 +405,7 @@ def agilent_send_enquiry():
             ser.write(command)
             time.sleep(0.1)
 
+        ser.timeout = 1.0
         response_str = ''
         while True:
             time.sleep(0.1)
