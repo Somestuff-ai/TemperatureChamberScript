@@ -23,6 +23,14 @@ def take_measurement(hwnd_cal_sheet, hwnd_take_meas):
     center_y = (rect[1] + rect[3]) // 2
     pyautogui.click(center_x, center_y)
 
+# Check if the button click was successful
+def is_button_greyed_out(hwnd_take_meas):
+    text_buffer = ctypes.create_unicode_buffer(256)
+    win32gui.SendMessage(hwnd_take_meas, win32con.WM_GETTEXT, 256, text_buffer)
+    return not text_buffer.value.startswith("Take")
+
+
+
 # Main function to take CS043 reading
 def take_cs043_reading():
     global HWND_CalSheet
@@ -33,8 +41,11 @@ def take_cs043_reading():
         if HWND_CalSheet != 0:
             hwnd_take_meas = win32gui.FindWindowEx(HWND_CalSheet, 0, None, "Take Measurement")
             if hwnd_take_meas != 0:
-                take_measurement(HWND_CalSheet, hwnd_take_meas)
-                time.sleep(0.4)
+                while True:
+                    take_measurement(HWND_CalSheet, hwnd_take_meas)
+                    time.sleep(0.4)
+                    if is_button_greyed_out(hwnd_take_meas):
+                        break
                 text = ""
                 text_buffer = ctypes.create_unicode_buffer(256)  # Create a buffer to hold the text
                 while not text_buffer.value.startswith("Take"):

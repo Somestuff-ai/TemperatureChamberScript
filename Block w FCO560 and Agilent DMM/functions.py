@@ -403,12 +403,12 @@ def agilent_send_enquiry():
 
         for command in commands:
             ser.write(command)
-            time.sleep(0.1)
+            time.sleep(1)
 
         ser.timeout = 1.0
         response_str = ''
         while True:
-            time.sleep(0.1)
+            
             response_bytes = ser.read(1000)
             response_str = response_bytes.decode().strip()
 
