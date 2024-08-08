@@ -2,23 +2,23 @@
     "tests": [
         {
             "temperature": 10,
-            "time_elapsed": "00:00:10",
-            "sleep_time": 1
+            "time_elapsed": "03:00:00",
+            "sleep_time": 60
         },
         {
             "temperature": 20,
-            "time_elapsed": "00:00:20",
-            "sleep_time": 1
+            "time_elapsed": "06:00:00",
+            "sleep_time": 60
         },
         {
             "temperature": 30,
-            "time_elapsed": "00:00:30",
-            "sleep_time": 1
+            "time_elapsed": "09:00:00",
+            "sleep_time": 60
         },
         {
             "temperature": 20,
-            "time_elapsed": "00:00:40",
-            "sleep_time": 1
+            "time_elapsed": "12:00:00",
+            "sleep_time": 60
         }
     ],
     "serial_ports": {

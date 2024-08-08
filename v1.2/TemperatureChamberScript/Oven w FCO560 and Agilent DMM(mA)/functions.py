@@ -37,7 +37,7 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
         WS504_T = fur_send_enquiry(3, 'Temp', '01L002')
         print(WS504_T)
 
-        EUT_mA = agilent_send_enquiry()
+        EUT_mA = agilent_send_enquiry()*1000
         if response is None:
             print ("failed to get a valid response from instrument check serial connection")
         print (EUT_mA)
@@ -51,7 +51,7 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
 
         with open(csv_file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA, Oven_T])
+            writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T, Oven_T, EUT_mA])
         
         if elapsed_time >= timedelta(seconds=elapsed_time_check_seconds):
             break
@@ -109,7 +109,7 @@ def end_point_20rdgs(temperature):
 
         with open(csv_file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA])  
+            writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T, Oven_T, EUT_mA])  
      
 
     avg_ISOTECH_T_value = round(sum_ISOTECH_T / 20, 3)
@@ -313,7 +313,7 @@ def set_csv_file_path(path):
     csv_file_path = path
 
 def generate_csv_headers():
-    headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT Ohm"]
+    headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "Oven Temp", "EUT mA"]
     with open(csv_file_path, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([])
@@ -326,7 +326,7 @@ def output_avgs():
         with open(csv_file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([])
-            writer.writerow(["Average RS80 Temp", "Average WS504 Temp", "Average EUT Ohm", "Check Difference", "Pass/Fail"])
+            writer.writerow(["Average RS80 Temp", "Average WS504 Temp", "Average EUT mA", "Check Difference", "Pass/Fail"])
 
             # Iterate through stored averages, differences, and conditions
             for i in range(len(avg_ISOTECH_T)):
@@ -350,7 +350,7 @@ def output_avgs():
     table_frame = ctk.CTkFrame(avg_dialogue)
     table_frame.pack(expand=True, fill='both', padx=10, pady=10)
 
-    headers = ["Average ISOTECH Temp", "Average WS504 Temp", "Average EUT Ohm", "Check Difference", "Pass/Fail"]
+    headers = ["Average ISOTECH Temp", "Average WS504 Temp", "Average EUT mA", "Check Difference", "Pass/Fail"]
 
     # Create header row
     for col, header in enumerate(headers):

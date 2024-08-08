@@ -184,17 +184,13 @@ def fur_send_enquiry(device, reading, enquiry):
     response = ser.read_until(b'\x03')  # Read until <ETX> character (ASCII code 3) is encountered#
     res += response.decode('ascii')
 
-    if device == 1:
-        if reading == 'Temp':
-            start_index = res.rfind('a') + 1
-            end_index = res.find('b',start_index)            
-    elif device == 3:
-        if reading == 'Temp':
-            start_index = res.find('k', res.find('Aux. Press.')) + 1
-            end_index = res.find('l',start_index)
-        elif reading == 'mA':
-            start_index = res.find('n', res.find('EUT mA')) + 1
-            end_index = res.find('o', start_index)
+
+    if reading == 'Temp':
+        start_index = res.find('k', res.find('Aux. Press.')) + 1
+        end_index = res.find('l',start_index)
+    elif reading == 'mA':
+        start_index = res.find('n', res.find('EUT mA')) + 1
+        end_index = res.find('o', start_index)
 
     substr = res[start_index:end_index]
     substr = float(substr)

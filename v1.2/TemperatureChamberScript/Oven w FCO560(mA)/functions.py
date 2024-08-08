@@ -32,12 +32,12 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
         Oven_T = fur_send_enquiry(1,'Temp','01M200' )
         print (Oven_T)
 
-        # WS504_T = fur_send_enquiry(7, 'Temp', '\x0401L002\x05z')
-        WS504_T = fur_send_enquiry(7, 'Temp', '01L002')
+        
+        WS504_T = fur_send_enquiry(3, 'Temp', '01L002')
         print(WS504_T)
 
-        # EUT_mA = fur_send_enquiry(7, 'mA','\x0401L002\x05z')
-        EUT_mA = fur_send_enquiry(7, 'mA','01L002')
+        
+        EUT_mA = fur_send_enquiry(3, 'mA','01L002')
         print (EUT_mA)
 
         ISOTECH_T = tt10_send_enquiry()
@@ -49,7 +49,7 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
 
         with open(csv_file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_mA, Oven_T])
+            writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T, Oven_T, EUT_mA])
         
         if elapsed_time >= timedelta(seconds=elapsed_time_check_seconds):
             break
@@ -86,11 +86,11 @@ def end_point_20rdgs(temperature):
         sum_ISOTECH_T = sum_ISOTECH_T + ISOTECH_T
         print (sum_ISOTECH_T)
         
-        WS504_T = float(fur_send_enquiry(7, 'Temp', '01L002'))
+        WS504_T = float(fur_send_enquiry(3, 'Temp', '01L002'))
         sum_WS504_T += WS504_T
         print (sum_WS504_T)
 
-        EUT_mA = float(fur_send_enquiry(7, 'mA', '01L002'))
+        EUT_mA = float(fur_send_enquiry(3, 'mA', '01L002'))
         sum_EUT_mA += EUT_mA
         print (sum_EUT_mA)
 
@@ -103,7 +103,7 @@ def end_point_20rdgs(temperature):
 
         with open(csv_file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([current_time_str, elapsed_time, ISOTECH_T, WS504_T, EUT_mA, Oven_T])
+            writer.writerow([current_time_str, elapsed_time, ISOTECH_T, WS504_T, Oven_T, EUT_mA])
 
     avg_ISOTECH_T_value = round(sum_ISOTECH_T / 20, 3)
     print (avg_ISOTECH_T_value)
@@ -183,7 +183,7 @@ def fur_send_enquiry(device, reading, enquiry):
         if reading == 'Temp':
             start_index = res.rfind('a') + 1
             end_index = res.find('b',start_index)            
-    elif device == 7:
+    elif device == 3:
         if reading == 'Temp':
             start_index = res.find('k', res.find('Aux. Press.')) + 1
             end_index = res.find('l',start_index)
@@ -236,7 +236,7 @@ def set_csv_file_path(path):
     csv_file_path = path
 
 def generate_csv_headers():
-    headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA", "Oven T"]
+    headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "Oven Temp", "EUT mA"]
     with open(csv_file_path, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([])

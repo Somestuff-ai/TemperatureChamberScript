@@ -34,10 +34,10 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
     while True:
 
 
-        WS504_T = fur_send_enquiry(7, 'Temp', '01L002')
+        WS504_T = fur_send_enquiry(3, 'Temp', '01L002')
         print(WS504_T)
 
-        EUT_mA = fur_send_enquiry(7, 'mA','01L002')
+        EUT_mA = fur_send_enquiry(3, 'mA','01L002')
         if response is None:
             print ("failed to get a valid response from instrument check serial connection")
         print (EUT_mA)        
@@ -90,11 +90,11 @@ def end_point_20rdgs(temperature):
         sum_ISOTECH_T = sum_ISOTECH_T + ISOTECH_T
         print (sum_ISOTECH_T)
         
-        WS504_T = float(fur_send_enquiry(7, 'Temp', '01L002'))
+        WS504_T = float(fur_send_enquiry(3, 'Temp', '01L002'))
         sum_WS504_T = sum_WS504_T + WS504_T
         print (sum_WS504_T)
 
-        EUT_mA = float(fur_send_enquiry(7, 'mA','01L002'))
+        EUT_mA = float(fur_send_enquiry(3, 'mA','01L002'))
         sum_EUT_mA = sum_EUT_mA + EUT_mA
         print (sum_EUT_mA)
 
@@ -185,18 +185,13 @@ def fur_send_enquiry(device, reading, enquiry):
     res = ''
     response = ser.read_until(b'\x03')  # Read until <ETX> character (ASCII code 3) is encountered#
     res += response.decode('ascii')
-
-    if device == 1:
-        if reading == 'Temp':
-            start_index = res.rfind('a') + 1
-            end_index = res.find('b',start_index)            
-    elif device == 7:
-        if reading == 'Temp':
-            start_index = res.find('k', res.find('Aux. Press.')) + 1
-            end_index = res.find('l',start_index)
-        elif reading == 'mA':
-            start_index = res.find('n', res.find('EUT mA')) + 1
-            end_index = res.find('o', start_index)
+    
+    if reading == 'Temp':
+        start_index = res.find('k', res.find('Aux. Press.')) + 1
+        end_index = res.find('l',start_index)
+    elif reading == 'mA':
+        start_index = res.find('n', res.find('EUT mA')) + 1
+        end_index = res.find('o', start_index)
 
     substr = res[start_index:end_index]
     substr = float(substr)

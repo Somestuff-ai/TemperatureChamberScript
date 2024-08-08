@@ -15,9 +15,6 @@ condition = []
       
 start_time = datetime.now()
 
-#########################################################################################################################################################################
-
-# Define functions for script commands
 
 def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
     global start_time
@@ -54,7 +51,7 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
 
         with open(csv_file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T,EUT_Ohm, Oven_T])
+            writer.writerow([current_time, elapsed_time, ISOTECH_T, WS504_T, Oven_T, EUT_Ohm])
         
         if elapsed_time >= timedelta(seconds=elapsed_time_check_seconds):
             break
@@ -318,7 +315,7 @@ def set_csv_file_path(path):
     csv_file_path = path
 
 def generate_csv_headers():
-    headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT Ohm"]
+    headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "Oven Temp", "EUT Ohm"]
     with open(csv_file_path, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([])

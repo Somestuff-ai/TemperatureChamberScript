@@ -22,7 +22,7 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
     global step
 
     generate_csv_headers()
-
+    #call agilent function to set to read mode
     agilent_readmode()
 
     try:
@@ -38,7 +38,7 @@ def run_temperature_test(temperature, elapsed_time_check, sleep_seconds):
         WS504_T = fur_send_enquiry(3, 'Temp', '01L002')
         print(WS504_T)
 
-        EUT_mA = agilent_send_enquiry()
+        EUT_mA = agilent_send_enquiry()*1000
         if response is None:
             print ("failed to get a valid response from instrument check serial connection")
         print (EUT_mA)
@@ -95,7 +95,7 @@ def end_point_20rdgs(temperature):
         sum_WS504_T = sum_WS504_T + WS504_T
         print (sum_WS504_T)
 
-        EUT_mA = agilent_send_enquiry()
+        EUT_mA = agilent_send_enquiry()*1000
         sum_EUT_mA = sum_EUT_mA + EUT_mA
         print (sum_EUT_mA)
 
@@ -185,17 +185,13 @@ def fur_send_enquiry(device, reading, enquiry):
     response = ser.read_until(b'\x03')  # Read until <ETX> character (ASCII code 3) is encountered#
     res += response.decode('ascii')
 
-    if device == 1:
-        if reading == 'Temp':
-            start_index = res.rfind('a') + 1
-            end_index = res.find('b',start_index)            
-    elif device == 3:
-        if reading == 'Temp':
-            start_index = res.find('k', res.find('Aux. Press.')) + 1
-            end_index = res.find('l',start_index)
-        elif reading == 'mA':
-            start_index = res.find('n', res.find('EUT mA')) + 1
-            end_index = res.find('o', start_index)
+
+    if reading == 'Temp':
+        start_index = res.find('k', res.find('Aux. Press.')) + 1
+        end_index = res.find('l',start_index)
+    elif reading == 'mA':
+        start_index = res.find('n', res.find('EUT mA')) + 1
+        end_index = res.find('o', start_index)
 
     substr = res[start_index:end_index]
     substr = float(substr)
@@ -368,7 +364,7 @@ def set_csv_file_path(path):
     csv_file_path = path
 
 def generate_csv_headers():
-    headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT Ohm"]
+    headers = ["Time", "Elapsed", "RS80 Temp", "WS504 Temp", "EUT mA"]
     with open(csv_file_path, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([])
@@ -381,7 +377,7 @@ def output_avgs():
         with open(csv_file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([])
-            writer.writerow(["Average RS80 Temp", "Average WS504 Temp", "Average EUT Ohm", "Check Difference", "Pass/Fail"])
+            writer.writerow(["Average RS80 Temp", "Average WS504 Temp", "Average EUT mA", "Check Difference", "Pass/Fail"])
 
             # Iterate through stored averages, differences, and conditions
             for i in range(len(avg_ISOTECH_T)):
@@ -405,7 +401,7 @@ def output_avgs():
     table_frame = ctk.CTkFrame(avg_dialogue)
     table_frame.pack(expand=True, fill='both', padx=10, pady=10)
 
-    headers = ["Average ISOTECH Temp", "Average WS504 Temp", "Average EUT Ohm", "Check Difference", "Pass/Fail"]
+    headers = ["Average ISOTECH Temp", "Average WS504 Temp", "Average EUT mA", "Check Difference", "Pass/Fail"]
 
     # Create header row
     for col, header in enumerate(headers):
